@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #e0e0e0; }
+    .geo-bg {
+      background-color: #0e0e0e;
+      background-image:
+        linear-gradient(135deg,#1a1a1a 25%,transparent 25%),
+        linear-gradient(225deg,#1a1a1a 25%,transparent 25%),
+        linear-gradient(315deg,#1a1a1a 25%,transparent 25%),
+        linear-gradient(45deg, #1a1a1a 25%,transparent 25%);
+      background-size: 32px 32px;
+      background-position: 0 0,16px 0,16px -16px,0 16px;
+    }
+    .gold-text { background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .gold-gradient { background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a); }
+    .divider-gold { height:1px; background:linear-gradient(90deg,transparent,#c9a04c55,transparent); }
+    .btn-gold { background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a); color:#111; font-weight:700; border:none; border-radius:10px; cursor:pointer; transition:opacity .2s,transform .15s; font-family:'Inter',sans-serif; }
+    .btn-gold:hover { opacity:.9; transform:translateY(-1px); }
+    .btn-outline { border:1.5px solid #c9a04c; color:#c9a04c; background:transparent; border-radius:10px; cursor:pointer; transition:background .2s; font-family:'Inter',sans-serif; }
+    .btn-outline:hover { background:#c9a04c15; }
+    .feature-card { background:#1a1a1a; border:1px solid #252525; border-radius:16px; padding:28px; transition:border-color .2s,transform .2s; }
+    .feature-card:hover { border-color:#c9a04c44; transform:translateY(-4px); }
+    .cat-card { background:#1a1a1a; border:1px solid #222; border-radius:14px; padding:20px; text-align:center; cursor:pointer; transition:border-color .2s,transform .2s; text-decoration:none; display:block; }
+    .cat-card:hover { border-color:#c9a04c55; transform:translateY(-3px); }
+    a { text-decoration:none; }
+    .hidden { display:none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div style="background:#080808; border-bottom:1px solid #1a1a1a; padding:6px 0;">
+    <div style="max-width:1280px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between;">
+      <span style="font-size:12px; color:#555;">📍 Entregamos em todo o Brasil</span>
+      <div style="display:flex; gap:20px;">
+        <a href="#" style="font-size:12px; color:#555; transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#555'">Nossas Lojas</a>
+        <a href="#" style="font-size:12px; color:#555; transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#555'">Atendimento</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header style="background:#111; border-bottom:1px solid #1e1e1e; position:sticky; top:0; z-index:50; box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.html" style="display:flex; align-items:center; gap:10px;">
+        <div class="gold-gradient" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px #c9a04c35;">
+          <svg width="20" height="20" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; letter-spacing:.15em; line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px; color:#555; letter-spacing:.12em; text-transform:uppercase; line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <nav style="display:flex; align-items:center; gap:10px;">
+        <a href="login.html" class="btn-outline" style="padding:9px 18px; font-size:13px; font-weight:600;">Entrar</a>
+        <a href="cadastro.html" class="btn-gold" style="padding:10px 20px; font-size:13px;">Criar Conta</a>
+        <a href="loja.html" style="display:flex; align-items:center; gap:7px; padding:10px 18px; background:#1e1e1e; border:1px solid #2a2a2a; border-radius:10px; font-size:13px; color:#ccc; transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c55'" onmouseout="this.style.borderColor='#2a2a2a'">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Ir à Loja
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="geo-bg" style="padding:80px 24px 90px; position:relative; overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,#c9a04c0d,transparent);pointer-events:none;"></div>
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#c9a04c,transparent);"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,#c9a04c44,transparent);"></div>
+
+    <div style="max-width:960px; margin:0 auto; text-align:center; position:relative;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#c9a04c12;border:1px solid #c9a04c33;border-radius:999px;padding:5px 16px;font-size:12px;color:#c9a04c;margin-bottom:28px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:#c9a04c;display:inline-block;"></span>
+        Qualidade garantida · Entrega em todo o Brasil
+      </div>
+
+      <h1 style="font-family:'Cormorant Garamond',serif; font-size:clamp(44px,7vw,80px); font-weight:700; line-height:1.05; color:#fff; margin-bottom:12px;">
+        Sua casa mais<br/><span class="gold-text">bonita e completa</span>
+      </h1>
+      <p style="font-size:18px; color:#666; max-width:520px; margin:0 auto 40px; line-height:1.7;">
+        Móveis, eletrodomésticos e eletrônicos com os melhores preços, parcelamento e frete grátis.
+      </p>
+
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="loja.html" class="btn-gold" style="padding:15px 36px; font-size:15px; border-radius:12px; box-shadow:0 8px 28px #c9a04c30;">
+          Explorar Loja →
+        </a>
+        <a href="cadastro.html" class="btn-outline" style="padding:14px 28px; font-size:15px; border-radius:12px;">
+          Criar Conta Grátis
+        </a>
+      </div>
+
+      <!-- Mini cards flutuantes -->
+      <div style="display:flex; justify-content:center; gap:14px; margin-top:60px; flex-wrap:wrap;">
+        <div style="background:#1a1a1a;border:1px solid #c9a04c33;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;text-align:left;">
+          <span style="font-size:28px;">❄️</span>
+          <div><p style="font-size:12px;font-weight:600;color:#fff;">Geladeira 480L</p><p style="font-size:12px;color:#c9a04c;">R$ 3.099,90</p></div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #c9a04c33;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;text-align:left;">
+          <span style="font-size:28px;">🖥️</span>
+          <div><p style="font-size:12px;font-weight:600;color:#fff;">Smart TV 55"</p><p style="font-size:12px;color:#c9a04c;">R$ 2.249,90</p></div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #c9a04c33;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;text-align:left;">
+          <span style="font-size:28px;">🛋️</span>
+          <div><p style="font-size:12px;font-weight:600;color:#fff;">Sofá 3 Lugares</p><p style="font-size:12px;color:#c9a04c;">R$ 1.959,30</p></div>
+        </div>
+        <div style="background:#1a1a1a;border:1px solid #c9a04c33;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;text-align:left;">
+          <span style="font-size:28px;">💻</span>
+          <div><p style="font-size:12px;font-weight:600;color:#fff;">Notebook i5</p><p style="font-size:12px;color:#c9a04c;">R$ 3.299,00</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section style="background:#111; border-bottom:1px solid #1e1e1e;">
+    <div style="max-width:1280px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:repeat(4,1fr); divide-x:1px solid #222;">
+      <div style="text-align:center; padding:24px 20px; border-right:1px solid #1e1e1e;">
+        <p style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700;" class="gold-text">50k+</p>
+        <p style="font-size:12px; color:#555; text-transform:uppercase; letter-spacing:.1em; margin-top:2px;">Clientes</p>
+      </div>
+      <div style="text-align:center; padding:24px 20px; border-right:1px solid #1e1e1e;">
+        <p style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700;" class="gold-text">8k+</p>
+        <p style="font-size:12px; color:#555; text-transform:uppercase; letter-spacing:.1em; margin-top:2px;">Produtos</p>
+      </div>
+      <div style="text-align:center; padding:24px 20px; border-right:1px solid #1e1e1e;">
+        <p style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700;" class="gold-text">12x</p>
+        <p style="font-size:12px; color:#555; text-transform:uppercase; letter-spacing:.1em; margin-top:2px;">Sem Juros</p>
+      </div>
+      <div style="text-align:center; padding:24px 20px;">
+        <p style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:#4ade80;">4.9★</p>
+        <p style="font-size:12px; color:#555; text-transform:uppercase; letter-spacing:.1em; margin-top:2px;">Avaliação</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section style="max-width:1280px; margin:0 auto; padding:72px 24px;">
+    <div style="text-align:center; margin-bottom:48px;">
+      <p style="font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:#c9a04c; margin-bottom:8px;">Por que escolher</p>
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:700; color:#fff;">A melhor experiência de compra</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px;">
+      <div class="feature-card">
+        <div style="width:48px;height:48px;border-radius:12px;background:#c9a04c18;border:1px solid #c9a04c22;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">🚚</div>
+        <h3 style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;">Frete Grátis</h3>
+        <p style="font-size:13px;color:#555;line-height:1.6;">Em compras acima de R$ 299 para todo o Brasil.</p>
+      </div>
+      <div class="feature-card">
+        <div style="width:48px;height:48px;border-radius:12px;background:#c9a04c18;border:1px solid #c9a04c22;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">💳</div>
+        <h3 style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;">Parcele em 12x</h3>
+        <p style="font-size:13px;color:#555;line-height:1.6;">Sem juros no cartão de crédito nas principais bandeiras.</p>
+      </div>
+      <div class="feature-card">
+        <div style="width:48px;height:48px;border-radius:12px;background:#c9a04c18;border:1px solid #c9a04c22;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">🔒</div>
+        <h3 style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;">Compra Segura</h3>
+        <p style="font-size:13px;color:#555;line-height:1.6;">Site criptografado e pagamento 100% protegido.</p>
+      </div>
+      <div class="feature-card">
+        <div style="width:48px;height:48px;border-radius:12px;background:#c9a04c18;border:1px solid #c9a04c22;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">↩️</div>
+        <h3 style="font-size:15px;font-weight:600;color:#fff;margin-bottom:6px;">30 Dias de Troca</h3>
+        <p style="font-size:13px;color:#555;line-height:1.6;">Não gostou? Troque sem burocracia em até 30 dias.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIAS -->
+  <div class="divider-gold"></div>
+  <section style="max-width:1280px; margin:0 auto; padding:72px 24px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+      <div>
+        <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:6px;">Departamentos</p>
+        <h2 style="font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:700; color:#fff;">Explore por categoria</h2>
+      </div>
+      <a href="loja.html" style="font-size:13px;color:#c9a04c;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Ver todos →</a>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px;">
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">❄️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Geladeiras</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🖥️</div><p style="font-size:12px;font-weight:500;color:#ddd;">TVs</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">📱</div><p style="font-size:12px;font-weight:500;color:#ddd;">Celulares</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">💻</div><p style="font-size:12px;font-weight:500;color:#ddd;">Notebooks</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🛋️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Sofás</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🍟</div><p style="font-size:12px;font-weight:500;color:#ddd;">Air Fryer</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🌀</div><p style="font-size:12px;font-weight:500;color:#ddd;">Lavadoras</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🎮</div><p style="font-size:12px;font-weight:500;color:#ddd;">Games</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🛏️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Camas</p></a>
+      <a href="loja.html" class="cat-card"><div style="font-size:32px;margin-bottom:8px;">🎧</div><p style="font-size:12px;font-weight:500;color:#ddd;">Áudio</p></a>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <div class="divider-gold"></div>
+  <section class="geo-bg" style="padding:72px 24px; position:relative; overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 50% 50%,#c9a04c10,transparent);pointer-events:none;"></div>
+    <div style="max-width:680px; margin:0 auto; text-align:center; position:relative;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:12px;">Comece agora</p>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:700;color:#fff;margin-bottom:12px;">
+        Crie sua conta e<br/><span class="gold-text">ganhe 10% de desconto</span>
+      </h2>
+      <p style="font-size:15px;color:#555;margin-bottom:32px;line-height:1.7;">Na sua primeira compra com cupom exclusivo de boas-vindas.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <a href="cadastro.html" class="btn-gold" style="padding:14px 32px;font-size:14px;border-radius:12px;box-shadow:0 8px 28px #c9a04c30;">
+          Criar Conta Grátis →
+        </a>
+        <a href="loja.html" class="btn-outline" style="padding:13px 24px;font-size:14px;border-radius:12px;">
+          Ver Promoções
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#080808; border-top:1px solid #1a1a1a; padding:48px 24px 24px;">
+    <div style="max-width:1280px; margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:36px;margin-bottom:40px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <div class="gold-gradient" style="width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="16" height="16" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+            </div>
+            <div>
+              <p style="font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:700;letter-spacing:.15em;" class="gold-text">AVANY</p>
+              <p style="font-size:9px;color:#444;letter-spacing:.1em;text-transform:uppercase;">Móveis e Eletro</p>
+            </div>
+          </div>
+          <p style="font-size:12px;color:#444;line-height:1.7;">Qualidade, conforto e estilo para a sua casa desde 2010.</p>
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Loja</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="loja.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Todos os Produtos</a>
+            <a href="loja.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Ofertas do Dia</a>
+            <a href="loja.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Lançamentos</a>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Conta</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="login.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Entrar</a>
+            <a href="cadastro.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Criar Conta</a>
+            <a href="conta.html" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Minha Conta</a>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Atendimento</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="#" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Central de Ajuda</a>
+            <a href="#" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Rastrear Pedido</a>
+            <a href="#" style="font-size:13px;color:#444;transition:color .2s;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#444'">Trocas e Devoluções</a>
+          </div>
+        </div>
+      </div>
+      <div class="divider-gold" style="margin-bottom:20px;"></div>
+      <p style="text-align:center; font-size:12px; color:#333;">&copy; 2026 Avany Móveis e Eletro · Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <script src="js/avany.js"></script>
+  <script>
+    function initPage() {
+      const user = Avany.auth.get();
+      if (user) {
+        // Trocar botões no header pelo nome do usuário
+        const nav = document.querySelector('header nav');
+        if (nav) {
+          nav.innerHTML = `
+            <span style="font-size:13px;color:#888;">Olá, <strong style="color:#c9a04c;">${user.name.split(' ')[0]}</strong></span>
+            <a href="conta.html" style="padding:9px 18px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;font-size:13px;color:#ccc;transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c55'" onmouseout="this.style.borderColor='#2a2a2a'">Minha Conta</a>
+            <a href="loja.html" class="btn-gold" style="padding:10px 20px;font-size:13px;border-radius:10px;">Ir à Loja →</a>
+          `;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

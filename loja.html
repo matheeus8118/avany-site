@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #e0e0e0; }
+
+    /* ---- COLORS ---- */
+    :root {
+      --gold: #c9a04c;
+      --gold-light: #e8c96d;
+      --gold-dark: #b8892a;
+      --dark-1: #111111;
+      --dark-2: #1a1a1a;
+      --dark-3: #222222;
+      --dark-4: #2a2a2a;
+    }
+
+    /* ---- UTILITIES ---- */
+    .gold-text { background: linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .gold-gradient { background: linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a); }
+    .geo-bg {
+      background-color:#111;
+      background-image:
+        linear-gradient(135deg,#1c1c1c 25%,transparent 25%),
+        linear-gradient(225deg,#1c1c1c 25%,transparent 25%),
+        linear-gradient(315deg,#1c1c1c 25%,transparent 25%),
+        linear-gradient(45deg,#1c1c1c 25%,transparent 25%);
+      background-size:30px 30px;
+      background-position:0 0,15px 0,15px -15px,0 15px;
+    }
+    .divider-gold { height:1px; background:linear-gradient(90deg,transparent,#c9a04c55,transparent); }
+
+    /* ---- SEARCH ---- */
+    .search-bar { background:#1e1e1e; border:1.5px solid #333; border-radius:8px; display:flex; overflow:hidden; transition:border-color .2s; }
+    .search-bar:focus-within { border-color:var(--gold); }
+    .search-bar input { background:transparent; border:none; outline:none; flex:1; padding:10px 16px; font-size:14px; color:#e0e0e0; }
+    .search-bar input::placeholder { color:#555; }
+    .search-bar button { background:linear-gradient(135deg,#c9a04c,#e8c96d); border:none; padding:0 18px; cursor:pointer; color:#111; font-weight:600; font-size:14px; }
+
+    /* ---- NAV LINKS ---- */
+    .cat-link { color:#aaa; font-size:13px; padding:0 14px; height:100%; display:flex; align-items:center; white-space:nowrap; transition:color .15s; cursor:pointer; border-bottom:2px solid transparent; }
+    .cat-link:hover { color:var(--gold-light); border-bottom-color:var(--gold); }
+
+    /* ---- BANNER ---- */
+    .banner-slide { display:none; }
+    .banner-slide.active { display:flex; }
+
+    /* ---- CARDS ---- */
+    .product-card {
+      background:var(--dark-2);
+      border:1px solid #2a2a2a;
+      border-radius:14px;
+      padding:14px;
+      cursor:pointer;
+      transition:border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .product-card:hover {
+      border-color:#c9a04c66;
+      transform:translateY(-4px);
+      box-shadow:0 16px 40px rgba(0,0,0,.5), 0 0 0 1px #c9a04c22;
+    }
+    .product-img {
+      width:100%; aspect-ratio:1; border-radius:10px; display:flex;
+      align-items:center; justify-content:center; font-size:52px;
+      margin-bottom:10px; background:var(--dark-3); overflow:hidden;
+    }
+    .price-main { font-size:18px; font-weight:700; color:#fff; }
+    .price-old { font-size:11px; color:#666; text-decoration:line-through; }
+    .stars { color:var(--gold); font-size:11px; }
+    .badge { font-size:10px; font-weight:700; border-radius:4px; padding:2px 6px; display:inline-block; }
+    .badge-off { background:#c9a04c20; color:var(--gold); }
+    .badge-frete { background:#1a3a2a; color:#4ade80; }
+
+    /* ---- SCROLL ROW ---- */
+    .scroll-row { display:flex; gap:12px; overflow-x:auto; padding-bottom:10px; scroll-behavior:smooth; }
+    .scroll-row::-webkit-scrollbar { height:4px; }
+    .scroll-row::-webkit-scrollbar-track { background:#1a1a1a; border-radius:2px; }
+    .scroll-row::-webkit-scrollbar-thumb { background:#c9a04c44; border-radius:2px; }
+
+    /* ---- SECTION HEADER ---- */
+    .sec-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; }
+    .sec-title { font-size:20px; font-weight:700; color:#fff; }
+    .sec-link { font-size:12px; color:var(--gold); text-decoration:none; cursor:pointer; }
+    .sec-link:hover { text-decoration:underline; }
+
+    /* ---- EXPLORE GRID ---- */
+    .explore-card {
+      background:var(--dark-2); border:1px solid #2a2a2a; border-radius:14px;
+      padding:20px; text-align:center; cursor:pointer;
+      transition:border-color .2s, transform .2s;
+    }
+    .explore-card:hover { border-color:#c9a04c66; transform:translateY(-3px); }
+
+    /* ---- BTN ---- */
+    .btn-gold { background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a); color:#111; font-weight:600; border:none; border-radius:8px; cursor:pointer; transition:opacity .2s; }
+    .btn-gold:hover { opacity:.9; }
+    .btn-outline { border:1px solid #c9a04c; color:var(--gold); background:transparent; border-radius:8px; cursor:pointer; transition:background .2s; font-size:13px; padding:7px 16px; }
+    .btn-outline:hover { background:#c9a04c15; }
+
+    /* ---- SCROLLBAR HIDE ---- */
+    .no-scroll::-webkit-scrollbar { display:none; }
+
+    /* ---- FILTER PILL ---- */
+    .filter-pill { padding:5px 14px; border-radius:999px; border:1px solid #333; background:transparent; color:#888; font-size:12px; cursor:pointer; transition:all .15s; white-space:nowrap; font-family:'Inter',sans-serif; }
+    .filter-pill:hover { border-color:#c9a04c55; color:#ddd; }
+    .filter-pill.active { border-color:var(--gold); background:#c9a04c22; color:var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div style="background:#0a0a0a; border-bottom:1px solid #1e1e1e; padding:6px 0;">
+    <div style="max-width:1280px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:12px; color:#666;">
+        📍 Entregar em: <span style="color:var(--gold); cursor:pointer;">01310-100 — São Paulo, SP</span>
+      </span>
+      <div style="display:flex; gap:20px;">
+        <span style="font-size:12px; color:#666; cursor:pointer;" onmouseover="this.style.color='#c9a04c'" onmouseout="this.style.color='#666'">Nossas Lojas</span>
+        <span style="font-size:12px; color:#666; cursor:pointer;">Rastrear Pedido</span>
+        <span style="font-size:12px; color:#666; cursor:pointer;">Atendimento</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header style="background:var(--dark-1); border-bottom:1px solid #1e1e1e; position:sticky; top:0; z-index:50; box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px; margin:0 auto; padding:14px 24px; display:flex; align-items:center; gap:20px;">
+
+      <!-- Logo -->
+      <a href="index.html" style="display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0;">
+        <div class="gold-gradient" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px #c9a04c40;">
+          <svg width="20" height="20" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; letter-spacing:.15em; line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px; color:#666; letter-spacing:.12em; text-transform:uppercase; line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+
+      <!-- Search -->
+      <div class="search-bar" style="flex:1; max-width:600px;">
+        <input type="text" id="search-input" placeholder="Buscar em Avany…" oninput="searchProducts(this.value)" />
+        <button onclick="searchProducts(document.getElementById('search-input').value)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35" stroke-linecap="round" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <!-- Icons -->
+      <div style="display:flex; align-items:center; gap:6px; flex-shrink:0; margin-left:auto;">
+        <div id="header-user"></div>
+        <!-- Favoritos -->
+        <button style="background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 10px;border-radius:8px;transition:background .2s;" onmouseover="this.style.background='#1e1e1e'" onmouseout="this.style.background='transparent'">
+          <div style="position:relative;">
+            <svg width="22" height="22" fill="none" stroke="#aaa" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <span style="font-size:11px;color:#888;">Favoritos</span>
+        </button>
+        <!-- Carrinho -->
+        <button onclick="window.location.href='carrinho.html'" style="background:linear-gradient(135deg,#c9a04c,#e8c96d);border:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 16px;border-radius:8px;box-shadow:0 4px 16px #c9a04c30;position:relative;">
+          <svg width="20" height="20" fill="none" stroke="#111" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span style="font-size:13px;font-weight:600;color:#111;">Carrinho</span>
+          <span data-cart-badge style="position:absolute;top:-6px;right:-6px;background:#111;color:#c9a04c;border-radius:50%;width:18px;height:18px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;border:1.5px solid #c9a04c;"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Nav -->
+    <div style="border-top:1px solid #1e1e1e; overflow:hidden;">
+      <div style="max-width:1280px; margin:0 auto; padding:0 16px; display:flex; height:42px; overflow-x:auto;" class="no-scroll" id="cat-nav">
+        <span class="cat-link" onclick="filterCatalog('all')">🏠 Todos</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px; margin:0 auto; padding:24px;">
+
+    <!-- HERO BANNER -->
+    <div style="position:relative; border-radius:16px; overflow:hidden; margin-bottom:28px; height:320px;" id="banner">
+
+      <!-- Slide 1 -->
+      <div class="banner-slide active" id="slide-1" style="height:320px; border-radius:16px; overflow:hidden; position:relative; align-items:center;">
+        <div class="geo-bg" style="width:100%; height:100%; display:flex; align-items:center; padding:40px 60px; gap:40px; border:1px solid #c9a04c33;">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 30% 50%,#c9a04c14,transparent);pointer-events:none;"></div>
+          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#c9a04c,transparent);"></div>
+          <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#c9a04c44,transparent);"></div>
+          <div style="flex:1; position:relative; z-index:1;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#c9a04c18;border:1px solid #c9a04c44;border-radius:999px;padding:4px 12px;font-size:11px;color:var(--gold);margin-bottom:16px;">⚡ Oferta por tempo limitado</div>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; line-height:1; color:#fff; margin-bottom:6px;">Festival de</h2>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:700; line-height:1; margin-bottom:16px;" class="gold-text">Eletro</h2>
+            <p style="font-size:15px; color:#888; margin-bottom:8px;">Cupons de até</p>
+            <p style="font-size:42px; font-weight:800; color:#fff; line-height:1; margin-bottom:4px;">R$ <span class="gold-text">500</span></p>
+            <p style="font-size:13px; color:#4ade80; margin-bottom:24px;">+ Frete grátis em todo o site*</p>
+            <button class="btn-gold" style="padding:12px 28px; font-size:14px; border-radius:10px; box-shadow:0 6px 20px #c9a04c30;">Ver Ofertas →</button>
+          </div>
+          <div style="display:flex; gap:16px; align-items:center; position:relative; z-index:1;">
+            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:140px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
+              <span style="font-size:60px;">🖥️</span><span style="font-size:12px;font-weight:700;color:#fff;">Smart TV 55"</span><span style="font-size:11px;color:var(--gold);">R$ 2.499,00</span>
+            </div>
+            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:140px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
+              <span style="font-size:70px;">❄️</span><span style="font-size:12px;font-weight:700;color:#fff;">Geladeira 480L</span><span style="font-size:11px;color:var(--gold);">R$ 3.899,00</span>
+            </div>
+            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:130px;height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
+              <span style="font-size:55px;">🍟</span><span style="font-size:12px;font-weight:700;color:#fff;">Air Fryer 5L</span><span style="font-size:11px;color:var(--gold);">R$ 349,90</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="banner-slide" id="slide-2" style="height:320px; border-radius:16px; overflow:hidden; position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0a1628,#112244,#1a2f4a);display:flex;align-items:center;padding:40px 60px;gap:40px;border:1px solid #1e4080;">
+          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#4488ff,transparent);"></div>
+          <div style="flex:1;z-index:1;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#4488ff18;border:1px solid #4488ff44;border-radius:999px;padding:4px 12px;font-size:11px;color:#6699ff;margin-bottom:16px;">🆕 Lançamento</div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:#fff;line-height:1;margin-bottom:6px;">Novos</h2>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:700;color:#6699ff;line-height:1;margin-bottom:16px;">Smartphones</h2>
+            <p style="font-size:15px;color:#668;margin-bottom:8px;">A partir de</p>
+            <p style="font-size:42px;font-weight:800;color:#fff;line-height:1;margin-bottom:24px;">R$ <span style="color:#6699ff;">899,90</span></p>
+            <button style="background:linear-gradient(135deg,#4466cc,#6699ff);color:#fff;font-weight:600;border:none;border-radius:10px;padding:12px 28px;font-size:14px;cursor:pointer;">Ver Lançamentos →</button>
+          </div>
+          <div style="display:flex;gap:16px;align-items:center;z-index:1;">
+            <div style="background:#0d1e38;border:1px solid #1e3a6a;border-radius:16px;width:140px;height:165px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:60px;">📱</span><span style="font-size:12px;font-weight:700;color:#fff;">iPhone 15</span><span style="font-size:11px;color:#6699ff;">R$ 4.999,00</span>
+            </div>
+            <div style="background:#0d1e38;border:1px solid #1e3a6a;border-radius:16px;width:150px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:68px;">📲</span><span style="font-size:12px;font-weight:700;color:#fff;">Samsung S24</span><span style="font-size:11px;color:#6699ff;">R$ 3.799,00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="banner-slide" id="slide-3" style="height:320px;border-radius:16px;overflow:hidden;position:relative;">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0e1a10,#152a18,#1a3a1e);display:flex;align-items:center;padding:40px 60px;gap:40px;border:1px solid #2a5a30;">
+          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#4ade80,transparent);"></div>
+          <div style="flex:1;z-index:1;">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#4ade8018;border:1px solid #4ade8044;border-radius:999px;padding:4px 12px;font-size:11px;color:#4ade80;margin-bottom:16px;">🛋️ Estoque limitado</div>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:#fff;line-height:1;margin-bottom:6px;">Móveis</h2>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:700;color:#4ade80;line-height:1;margin-bottom:16px;">Premium</h2>
+            <p style="font-size:15px;color:#4a6a4a;margin-bottom:8px;">Até <span style="font-weight:700;color:#4ade80;font-size:20px;">40% OFF</span></p>
+            <p style="font-size:14px;color:#4a6a4a;margin-bottom:24px;">+ Montagem grátis em SP</p>
+            <button style="background:linear-gradient(135deg,#2a8a40,#4ade80);color:#111;font-weight:600;border:none;border-radius:10px;padding:12px 28px;font-size:14px;cursor:pointer;">Ver Móveis →</button>
+          </div>
+          <div style="display:flex;gap:16px;align-items:center;z-index:1;">
+            <div style="background:#0d1e10;border:1px solid #2a4a2a;border-radius:16px;width:145px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:62px;">🛋️</span><span style="font-size:12px;font-weight:700;color:#fff;">Sofá Retrátil</span><span style="font-size:11px;color:#4ade80;">R$ 1.899,00</span>
+            </div>
+            <div style="background:#0d1e10;border:1px solid #2a4a2a;border-radius:16px;width:145px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+              <span style="font-size:66px;">🪑</span><span style="font-size:12px;font-weight:700;color:#fff;">Cadeira Gamer</span><span style="font-size:11px;color:#4ade80;">R$ 999,00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dots -->
+      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;">
+        <button onclick="goSlide(1)" id="dot-1" style="width:24px;height:6px;border-radius:3px;border:none;cursor:pointer;background:var(--gold);transition:all .2s;"></button>
+        <button onclick="goSlide(2)" id="dot-2" style="width:8px;height:6px;border-radius:3px;border:none;cursor:pointer;background:#444;transition:all .2s;"></button>
+        <button onclick="goSlide(3)" id="dot-3" style="width:8px;height:6px;border-radius:3px;border:none;cursor:pointer;background:#444;transition:all .2s;"></button>
+      </div>
+      <button onclick="prevSlide()" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">‹</button>
+      <button onclick="nextSlide()" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">›</button>
+    </div>
+
+    <!-- MINI BANNERS -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:32px;">
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c55'" onmouseout="this.style.borderColor='#2a2a2a'">
+        <span style="font-size:32px;">🚚</span>
+        <div><p style="font-size:13px;font-weight:600;color:#fff;">Frete Grátis</p><p style="font-size:11px;color:#666;">Em compras acima de R$ 299</p></div>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c55'" onmouseout="this.style.borderColor='#2a2a2a'">
+        <span style="font-size:32px;">💳</span>
+        <div><p style="font-size:13px;font-weight:600;color:#fff;">Parcelamento</p><p style="font-size:11px;color:#666;">Até 12x sem juros no cartão</p></div>
+      </div>
+      <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c55'" onmouseout="this.style.borderColor='#2a2a2a'">
+        <span style="font-size:32px;">🔒</span>
+        <div><p style="font-size:13px;font-weight:600;color:#fff;">Compra Segura</p><p style="font-size:11px;color:#666;">Garantia e troca facilitada</p></div>
+      </div>
+    </div>
+
+    <!-- SECTION: Catálogo Dinâmico -->
+    <section style="margin-bottom:36px;" id="catalog-section">
+      <div class="sec-header" style="flex-wrap:wrap;gap:12px;align-items:flex-start;">
+        <div>
+          <p style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:4px;" id="cat-sub">Tudo para você</p>
+          <h2 class="sec-title" id="cat-title">Nosso Catálogo 🛍️</h2>
+        </div>
+        <div id="cat-filters" style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;"></div>
+      </div>
+      <div id="product-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:16px;"></div>
+      <div id="catalog-empty" style="display:none;text-align:center;padding:60px 20px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;">
+        <p style="font-size:40px;margin-bottom:12px;">📦</p>
+        <p style="font-size:16px;font-weight:500;color:#888;">Nenhum produto encontrado</p>
+        <p style="font-size:13px;color:#555;margin-top:6px;">Tente outra busca ou categoria</p>
+      </div>
+    </section>
+
+    <!-- EXPLORE BANNER -->
+    <div style="background:linear-gradient(135deg,#1a1500,#2a2200,#1a1500);border:1px solid #c9a04c44;border-radius:16px;padding:28px 36px;margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;">
+      <div>
+        <p style="font-size:12px;color:var(--gold);text-transform:uppercase;letter-spacing:.15em;margin-bottom:6px;">Exclusivo Avany</p>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:4px;">Cashback em <span class="gold-text">todas as compras</span></h3>
+        <p style="font-size:14px;color:#777;">Acumule pontos e troque por descontos na próxima compra</p>
+      </div>
+      <button class="btn-gold" style="padding:12px 28px;font-size:14px;border-radius:10px;white-space:nowrap;box-shadow:0 6px 20px #c9a04c30;">Saiba mais →</button>
+    </div>
+
+    <!-- EXPLORE E APROVEITE -->
+    <section style="margin-bottom:36px;">
+      <div class="sec-header">
+        <div>
+          <p style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);margin-bottom:4px;">Navegue por</p>
+          <h2 class="sec-title">Explore e aproveite</h2>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;">
+        <div class="explore-card" onclick="filterCatalog('Celulares')"><div style="font-size:32px;margin-bottom:8px;">📱</div><p style="font-size:12px;font-weight:500;color:#ddd;">Celulares</p></div>
+        <div class="explore-card" onclick="filterCatalog('Eletrodomésticos')"><div style="font-size:32px;margin-bottom:8px;">❄️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Geladeiras</p></div>
+        <div class="explore-card" onclick="filterCatalog('TV e Vídeo')"><div style="font-size:32px;margin-bottom:8px;">🖥️</div><p style="font-size:12px;font-weight:500;color:#ddd;">TVs</p></div>
+        <div class="explore-card" onclick="filterCatalog('Informática')"><div style="font-size:32px;margin-bottom:8px;">💻</div><p style="font-size:12px;font-weight:500;color:#ddd;">Notebooks</p></div>
+        <div class="explore-card" onclick="filterCatalog('Móveis')"><div style="font-size:32px;margin-bottom:8px;">🛋️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Sofás</p></div>
+        <div class="explore-card" onclick="filterCatalog('Eletrodomésticos')"><div style="font-size:32px;margin-bottom:8px;">🍟</div><p style="font-size:12px;font-weight:500;color:#ddd;">Air Fryer</p></div>
+        <div class="explore-card" onclick="filterCatalog('Eletrodomésticos')"><div style="font-size:32px;margin-bottom:8px;">🌀</div><p style="font-size:12px;font-weight:500;color:#ddd;">Lavadoras</p></div>
+        <div class="explore-card" onclick="filterCatalog('Games')"><div style="font-size:32px;margin-bottom:8px;">🎮</div><p style="font-size:12px;font-weight:500;color:#ddd;">Games</p></div>
+        <div class="explore-card" onclick="filterCatalog('Móveis')"><div style="font-size:32px;margin-bottom:8px;">🛏️</div><p style="font-size:12px;font-weight:500;color:#ddd;">Camas</p></div>
+        <div class="explore-card" onclick="filterCatalog('Áudio')"><div style="font-size:32px;margin-bottom:8px;">🎧</div><p style="font-size:12px;font-weight:500;color:#ddd;">Áudio</p></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#111; border-top:1px solid #1e1e1e; margin-top:24px;">
+    <div class="divider-gold"></div>
+    <div style="max-width:1280px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div class="gold-gradient" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:700;letter-spacing:.15em;" class="gold-text">AVANY</p>
+            <p style="font-size:9px;color:#555;letter-spacing:.1em;text-transform:uppercase;">Móveis e Eletro</p>
+          </div>
+        </div>
+        <p style="font-size:12px;color:#555;line-height:1.7;">Sua loja de móveis e eletrodomésticos com os melhores preços e qualidade garantida.</p>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Institucional</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Sobre nós</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Nossas Lojas</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Trabalhe Conosco</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Blog</a>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Atendimento</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Central de Ajuda</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Rastrear Pedido</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Trocas e Devoluções</a>
+          <a href="#" style="font-size:13px;color:#555;text-decoration:none;">Fale Conosco</a>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">Pagamentos</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <div style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;font-size:11px;color:#888;">Visa</div>
+          <div style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;font-size:11px;color:#888;">Master</div>
+          <div style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;font-size:11px;color:#888;">Pix</div>
+          <div style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;font-size:11px;color:#888;">Boleto</div>
+          <div style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;font-size:11px;color:#888;">Elo</div>
+        </div>
+      </div>
+    </div>
+    <div class="divider-gold"></div>
+    <div style="max-width:1280px;margin:0 auto;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <p style="font-size:12px;color:#444;">&copy; 2026 Avany Móveis e Eletro · Todos os direitos reservados</p>
+      <p style="font-size:11px;color:#333;"><a href="admin.html" style="color:#444;text-decoration:none;">⚙ Admin</a></p>
+    </div>
+  </footer>
+
+  <!-- Banner slider script -->
+  <script>
+    let current = 1;
+    const total = 3;
+    function goSlide(n) {
+      document.querySelectorAll('.banner-slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('[id^="dot-"]').forEach(d => { d.style.background='#444'; d.style.width='8px'; });
+      current = n;
+      document.getElementById('slide-' + n).classList.add('active');
+      const dot = document.getElementById('dot-' + n);
+      dot.style.background = 'var(--gold)';
+      dot.style.width = '24px';
+    }
+    function nextSlide() { goSlide(current === total ? 1 : current + 1); }
+    function prevSlide() { goSlide(current === 1 ? total : current - 1); }
+    setInterval(nextSlide, 5000);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/avany.js"></script>
+  <script src="js/loja.js"></script>
+</body>
+</html>

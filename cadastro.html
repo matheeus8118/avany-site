@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Conta — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0e0e0e; color: #e0e0e0; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .geo-bg {
+      background-color: #0e0e0e;
+      background-image:
+        linear-gradient(135deg, #1a1a1a 25%, transparent 25%),
+        linear-gradient(225deg, #1a1a1a 25%, transparent 25%),
+        linear-gradient(315deg, #1a1a1a 25%, transparent 25%),
+        linear-gradient(45deg,  #1a1a1a 25%, transparent 25%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 0, 15px -15px, 0 15px;
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #c9a04c, #e8c96d, #c9a04c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gold-gradient { background: linear-gradient(135deg, #c9a04c, #e8c96d, #b8892a); }
+
+    .input-field {
+      width: 100%;
+      background: #141414;
+      border: 1.5px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-size: 14px;
+      color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .input-field:focus { border-color: #c9a04c; box-shadow: 0 0 0 3px rgba(201,160,76,.12); }
+    .input-field::placeholder { color: #444; }
+    .input-field.error { border-color: #f87171; box-shadow: 0 0 0 3px rgba(248,113,113,.1); }
+    .input-field.success { border-color: #4ade80; }
+
+    .btn-gold {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #c9a04c, #e8c96d, #b8892a);
+      color: #111;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: .02em;
+      box-shadow: 0 6px 24px rgba(201,160,76,.3);
+      transition: opacity .2s, transform .15s;
+    }
+    .btn-gold:hover { opacity: .92; transform: translateY(-1px); }
+
+    .card {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 0 0 1px #c9a04c11;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .eye-btn {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #555; padding: 4px;
+    }
+    .eye-btn:hover { color: #c9a04c; }
+
+    .strength-bar { height: 4px; border-radius: 2px; flex: 1; background: #222; transition: background .3s; }
+
+    .step-indicator {
+      display: flex; align-items: center; gap: 0; margin-bottom: 28px;
+    }
+    .step { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; border: 2px solid #333; color: #555; flex-shrink: 0; transition: all .3s; }
+    .step.active { border-color: #c9a04c; color: #c9a04c; background: #c9a04c15; }
+    .step.done { border-color: #4ade80; background: #4ade8020; color: #4ade80; }
+    .step-line { flex: 1; height: 2px; background: #222; transition: background .3s; }
+    .step-line.done { background: #4ade8060; }
+
+    a { text-decoration: none; }
+    label { cursor: pointer; }
+
+    .benefit {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; color: #666; padding: 8px 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .benefit:last-child { border-bottom: none; }
+    .benefit-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; background: #1e1e1e; }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+  </style>
+</head>
+<body class="geo-bg">
+
+  <!-- HEADER -->
+  <header style="background: rgba(10,10,10,.9); border-bottom: 1px solid #1e1e1e; backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 50;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;">
+      <a href="index.html" style="display: flex; align-items: center; gap: 10px;">
+        <div class="gold-gradient" style="width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(201,160,76,.3);">
+          <svg width="18" height="18" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 700; letter-spacing: .15em; line-height: 1;" class="gold-text">AVANY</p>
+          <p style="font-size: 9px; color: #555; letter-spacing: .12em; text-transform: uppercase; line-height: 1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span style="font-size: 13px; color: #666;">Já tem conta?</span>
+        <a href="login.html" style="font-size: 13px; font-weight: 600; color: #c9a04c; border: 1px solid #c9a04c55; padding: 7px 16px; border-radius: 8px; transition: background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='transparent'">Entrar</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main style="flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; position: relative;">
+    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 40%, rgba(201,160,76,.06), transparent); pointer-events: none;"></div>
+
+    <div style="display: flex; gap: 40px; align-items: flex-start; width: 100%; max-width: 920px; position: relative;">
+
+      <!-- Benefícios (desktop) -->
+      <div style="flex: 1; min-width: 220px; display: none;" id="benefits-panel">
+        <div style="margin-bottom: 32px;">
+          <div class="gold-gradient" style="width: 52px; height: 52px; border-radius: 13px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(201,160,76,.3); margin-bottom: 14px;">
+            <svg width="26" height="26" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+          </div>
+          <p style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700;" class="gold-text">AVANY</p>
+          <p style="font-size: 10px; color: #555; letter-spacing: .12em; text-transform: uppercase;">Móveis e Eletro</p>
+        </div>
+
+        <p style="font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 16px;">Vantagens da sua conta</p>
+
+        <div>
+          <div class="benefit"><div class="benefit-icon">🚚</div> Frete grátis em compras acima de R$ 299</div>
+          <div class="benefit"><div class="benefit-icon">💰</div> Cashback em todas as compras</div>
+          <div class="benefit"><div class="benefit-icon">🏷️</div> Cupons exclusivos para membros</div>
+          <div class="benefit"><div class="benefit-icon">📦</div> Rastreio em tempo real</div>
+          <div class="benefit"><div class="benefit-icon">⭐</div> Acesso antecipado a promoções</div>
+          <div class="benefit"><div class="benefit-icon">🔒</div> Histórico de pedidos seguro</div>
+        </div>
+      </div>
+
+      <!-- Card de cadastro -->
+      <div class="card" style="flex: none;" id="main-card">
+
+        <!-- Steps -->
+        <div class="step-indicator" id="steps">
+          <div class="step active" id="step-1">1</div>
+          <div class="step-line" id="line-1"></div>
+          <div class="step" id="step-2">2</div>
+          <div class="step-line" id="line-2"></div>
+          <div class="step" id="step-3">3</div>
+        </div>
+
+        <!-- PASSO 1 - Dados pessoais -->
+        <div class="form-step active" id="form-step-1">
+          <h1 style="font-size: 21px; font-weight: 700; color: #fff; margin-bottom: 4px;">Crie sua conta</h1>
+          <p style="font-size: 13px; color: #555; margin-bottom: 24px;">Passo 1 de 3 · Dados pessoais</p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Nome</label>
+                <input type="text" id="f-nome" class="input-field" placeholder="João" />
+              </div>
+              <div>
+                <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Sobrenome</label>
+                <input type="text" id="f-sobrenome" class="input-field" placeholder="Silva" />
+              </div>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">CPF</label>
+              <input type="text" id="f-cpf" class="input-field" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)" />
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Data de Nascimento</label>
+              <input type="text" id="f-nasc" class="input-field" placeholder="DD/MM/AAAA" maxlength="10" oninput="maskDate(this)" />
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Telefone</label>
+              <input type="text" id="f-tel" class="input-field" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhone(this)" />
+            </div>
+
+            <button type="button" class="btn-gold" onclick="goStep(2)" style="margin-top: 6px;">Continuar →</button>
+          </div>
+
+          <p style="text-align: center; font-size: 13px; color: #555; margin-top: 20px;">
+            Já tem conta? <a href="login.html" style="color: #c9a04c; font-weight: 600;">Entrar</a>
+          </p>
+        </div>
+
+        <!-- PASSO 2 - Email e senha -->
+        <div class="form-step" id="form-step-2">
+          <h1 style="font-size: 21px; font-weight: 700; color: #fff; margin-bottom: 4px;">Acesso à conta</h1>
+          <p style="font-size: 13px; color: #555; margin-bottom: 24px;">Passo 2 de 3 · Email e senha</p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Email</label>
+              <input type="email" id="f-email" class="input-field" placeholder="joao@email.com" />
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Senha</label>
+              <div style="position: relative;">
+                <input type="password" id="f-senha" class="input-field" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)" style="padding-right: 44px;" />
+                <button type="button" class="eye-btn" onclick="togglePwd('f-senha', this)">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <!-- Barra de força -->
+              <div style="display: flex; gap: 4px; margin-top: 8px;">
+                <div class="strength-bar" id="sb1"></div>
+                <div class="strength-bar" id="sb2"></div>
+                <div class="strength-bar" id="sb3"></div>
+                <div class="strength-bar" id="sb4"></div>
+              </div>
+              <p id="strength-label" style="font-size: 11px; color: #555; margin-top: 4px;"></p>
+            </div>
+
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 6px;">Confirmar Senha</label>
+              <div style="position: relative;">
+                <input type="password" id="f-senha2" class="input-field" placeholder="Repita a senha" oninput="checkMatch()" style="padding-right: 44px;" />
+                <button type="button" class="eye-btn" onclick="togglePwd('f-senha2', this)">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <p id="match-label" style="font-size: 11px; margin-top: 4px;"></p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+              <button type="button" onclick="goStep(1)" style="flex: 1; padding: 13px; background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 10px; color: #888; font-size: 14px; font-family: 'Inter',sans-serif; cursor: pointer; transition: border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">← Voltar</button>
+              <button type="button" class="btn-gold" onclick="goStep(3)" style="flex: 2;">Continuar →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASSO 3 - Preferências -->
+        <div class="form-step" id="form-step-3">
+          <h1 style="font-size: 21px; font-weight: 700; color: #fff; margin-bottom: 4px;">Quase lá!</h1>
+          <p style="font-size: 13px; color: #555; margin-bottom: 24px;">Passo 3 de 3 · Preferências</p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 10px;">O que você mais busca?</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="interests">
+                <label class="interest-label" onclick="toggleInterest(this)">🛋️ Móveis</label>
+                <label class="interest-label" onclick="toggleInterest(this)">❄️ Eletrodomésticos</label>
+                <label class="interest-label" onclick="toggleInterest(this)">📺 TVs e Áudio</label>
+                <label class="interest-label" onclick="toggleInterest(this)">💻 Informática</label>
+                <label class="interest-label" onclick="toggleInterest(this)">📱 Celulares</label>
+                <label class="interest-label" onclick="toggleInterest(this)">🍳 Cozinha</label>
+              </div>
+            </div>
+
+            <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px;">
+              <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #777; user-select: none;">
+                <input type="checkbox" id="chk-news" style="width: 16px; height: 16px; accent-color: #c9a04c; margin-top: 1px; flex-shrink: 0;" checked />
+                Quero receber ofertas e novidades por email
+              </label>
+              <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #777; user-select: none;">
+                <input type="checkbox" id="chk-sms" style="width: 16px; height: 16px; accent-color: #c9a04c; margin-top: 1px; flex-shrink: 0;" />
+                Quero receber alertas de preço por SMS
+              </label>
+              <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #777; user-select: none;">
+                <input type="checkbox" id="chk-terms" style="width: 16px; height: 16px; accent-color: #c9a04c; margin-top: 1px; flex-shrink: 0;" required />
+                Li e concordo com os <a href="#" style="color: #c9a04c;">Termos de Uso</a> e a <a href="#" style="color: #c9a04c;">Política de Privacidade</a>
+              </label>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+              <button type="button" onclick="goStep(2)" style="flex: 1; padding: 13px; background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 10px; color: #888; font-size: 14px; font-family: 'Inter',sans-serif; cursor: pointer; transition: border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">← Voltar</button>
+              <button type="button" class="btn-gold" onclick="handleRegister()" style="flex: 2;" id="btn-register">Criar Conta</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUCESSO -->
+        <div class="form-step" id="form-step-done" style="text-align: center; padding: 16px 0;">
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: #4ade8020; border: 2px solid #4ade80; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 34px;">✓</div>
+          <h2 style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px;">Conta criada!</h2>
+          <p style="font-size: 14px; color: #666; margin-bottom: 28px;">Bem-vindo(a) à Avany. Sua conta está pronta.</p>
+          <a href="loja.html" class="btn-gold" style="display: block; text-align: center; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: .02em; box-shadow: 0 6px 24px rgba(201,160,76,.3);">
+            Ir para a loja →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top: 1px solid #1a1a1a; padding: 16px 24px; text-align: center;">
+    <p style="font-size: 11px; color: #333;">&copy; 2026 Avany Móveis e Eletro · Todos os direitos reservados</p>
+  </footer>
+
+  <style>
+    .interest-label {
+      padding: 9px 12px;
+      background: #1a1a1a;
+      border: 1.5px solid #2a2a2a;
+      border-radius: 9px;
+      font-size: 13px;
+      color: #888;
+      cursor: pointer;
+      transition: all .2s;
+      user-select: none;
+      text-align: center;
+    }
+    .interest-label.selected {
+      border-color: #c9a04c;
+      background: #c9a04c15;
+      color: #c9a04c;
+    }
+  </style>
+
+  <script>
+    let currentStep = 1;
+
+    function goStep(n) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('form-step-' + n).classList.add('active');
+
+      // Steps indicator
+      [1,2,3].forEach(i => {
+        const el = document.getElementById('step-' + i);
+        el.classList.remove('active','done');
+        if (i < n) el.classList.add('done'), el.textContent = '✓';
+        else if (i === n) el.classList.add('active'), el.textContent = i;
+        else el.textContent = i;
+      });
+      [1,2].forEach(i => {
+        const line = document.getElementById('line-' + i);
+        line.classList.toggle('done', i < n);
+      });
+
+      // Mostrar painel de benefícios a partir do passo 2
+      const panel = document.getElementById('benefits-panel');
+      if (window.innerWidth >= 768) panel.style.display = n >= 2 ? 'block' : 'none';
+
+      currentStep = n;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function togglePwd(id, btn) {
+      const input = document.getElementById(id);
+      input.type = input.type === 'text' ? 'password' : 'text';
+      btn.querySelector('svg').style.opacity = input.type === 'text' ? '.5' : '1';
+    }
+
+    function checkStrength(val) {
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const colors = ['#f87171','#fb923c','#facc15','#4ade80'];
+      const labels = ['Muito fraca','Fraca','Razoável','Forte'];
+      for (let i = 1; i <= 4; i++) {
+        const bar = document.getElementById('sb' + i);
+        bar.style.background = i <= score ? colors[score - 1] : '#222';
+      }
+      const lbl = document.getElementById('strength-label');
+      lbl.textContent = val.length ? labels[score - 1] || '' : '';
+      lbl.style.color = val.length ? colors[score - 1] : '#555';
+    }
+
+    function checkMatch() {
+      const a = document.getElementById('f-senha').value;
+      const b = document.getElementById('f-senha2').value;
+      const lbl = document.getElementById('match-label');
+      const inp = document.getElementById('f-senha2');
+      if (!b) { lbl.textContent = ''; inp.classList.remove('error','success'); return; }
+      if (a === b) { lbl.textContent = 'Senhas coincidem ✓'; lbl.style.color = '#4ade80'; inp.classList.remove('error'); inp.classList.add('success'); }
+      else { lbl.textContent = 'Senhas não coincidem'; lbl.style.color = '#f87171'; inp.classList.remove('success'); inp.classList.add('error'); }
+    }
+
+    function maskCPF(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length > 3) v = v.slice(0,3) + '.' + v.slice(3);
+      if (v.length > 7) v = v.slice(0,7) + '.' + v.slice(7);
+      if (v.length > 11) v = v.slice(0,11) + '-' + v.slice(11);
+      el.value = v.slice(0,14);
+    }
+
+    function maskDate(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+      if (v.length > 5) v = v.slice(0,5) + '/' + v.slice(5);
+      el.value = v.slice(0,10);
+    }
+
+    function maskPhone(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length > 0) v = '(' + v;
+      if (v.length > 3) v = v.slice(0,3) + ') ' + v.slice(3);
+      if (v.length > 10) v = v.slice(0,10) + '-' + v.slice(10);
+      el.value = v.slice(0,15);
+    }
+
+    function toggleInterest(el) { el.classList.toggle('selected'); }
+
+    function handleRegister() {
+      const terms = document.getElementById('chk-terms');
+      if (!terms.checked) {
+        terms.style.outline = '2px solid #f87171';
+        setTimeout(() => terms.style.outline = '', 2000);
+        return;
+      }
+      const btn = document.getElementById('btn-register');
+      btn.textContent = 'Criando conta…';
+      btn.style.opacity = '.7';
+      setTimeout(() => {
+        // Salva sessão via Avany.auth
+        const nome     = document.getElementById('f-nome').value.trim();
+        const sobrenome= document.getElementById('f-sobrenome').value.trim();
+        const email    = document.getElementById('f-email').value.trim();
+        Avany.auth.set({ name: (nome + ' ' + sobrenome).trim() || 'Usuário', email });
+        document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('form-step-done').classList.add('active');
+        document.getElementById('steps').style.display = 'none';
+      }, 1500);
+    }
+
+    // Mostrar painel lateral no desktop
+    window.addEventListener('resize', () => {
+      const panel = document.getElementById('benefits-panel');
+      if (window.innerWidth >= 768 && currentStep >= 2) panel.style.display = 'block';
+      else panel.style.display = 'none';
+    });
+  </script>
+  <script src="js/avany.js"></script>
+  <script>
+    // Se já estiver logado, vai direto para a loja
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Avany.auth.get()) window.location.href = 'loja.html';
+    });
+  </script>
+</body>
+</html>
