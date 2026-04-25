@@ -3,8 +3,8 @@
 // ================================================================
 
 // ── Supabase config — substitua pelos valores do seu projeto ────
-const SUPABASE_URL      = 'https://YOUR_PROJECT.supabase.co';
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+const SUPABASE_URL      = 'https://hqskbchyyldbisqdyttj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_n62pIhl0E3YJRCKRQUX03g_WmmjD9yd';
 const ADMIN_EMAIL       = 'matheeus998@gmail.com';
 // ────────────────────────────────────────────────────────────────
 
