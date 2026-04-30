@@ -221,6 +221,37 @@ const Avany = (function () {
     },
   };
 
+  // ── PAYMENTS ────────────────────────────────────────────────
+  const PAYMENTS_KEY = 'avany_payments';
+  const PAYMENT_DEFAULTS = [
+    { id:'visa',      name:'Visa',        type:'card',   active:true,  installments:12, interestFree:true  },
+    { id:'master',    name:'Mastercard',  type:'card',   active:true,  installments:12, interestFree:true  },
+    { id:'elo',       name:'Elo',         type:'card',   active:true,  installments:12, interestFree:true  },
+    { id:'amex',      name:'Amex',        type:'card',   active:false, installments:6,  interestFree:false },
+    { id:'hipercard', name:'Hipercard',   type:'card',   active:false, installments:12, interestFree:true  },
+    { id:'pix',       name:'Pix',         type:'pix',    active:true,  discount:5                         },
+    { id:'boleto',    name:'Boleto',      type:'boleto', active:true,  discount:0,      deadline:3         },
+  ];
+
+  const payments = {
+    get()      { try { return JSON.parse(localStorage.getItem(PAYMENTS_KEY)) || PAYMENT_DEFAULTS; } catch { return PAYMENT_DEFAULTS; } },
+    save(list) { localStorage.setItem(PAYMENTS_KEY, JSON.stringify(list)); },
+    defaults() { return JSON.parse(JSON.stringify(PAYMENT_DEFAULTS)); },
+    getActive(){ return this.get().filter(p => p.active); },
+    maxInstallments() {
+      const cards = this.getActive().filter(p => p.type === 'card');
+      return cards.length ? Math.max(...cards.map(c => c.installments || 1)) : 0;
+    },
+    pixDiscount() {
+      const pix = this.getActive().find(p => p.type === 'pix');
+      return pix ? (pix.discount || 0) : 0;
+    },
+    interestFree() {
+      const cards = this.getActive().filter(p => p.type === 'card');
+      return cards.some(c => c.interestFree);
+    },
+  };
+
   // ── ORDERS ──────────────────────────────────────────────────
   const ORDERS_KEY = 'avany_orders';
 
@@ -390,7 +421,7 @@ const Avany = (function () {
   }
 
   // ── PUBLIC API ──────────────────────────────────────────────
-  return { auth, cart, products, banners, orders, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
+  return { auth, cart, products, banners, orders, payments, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
 })();
 
 // Auto-init

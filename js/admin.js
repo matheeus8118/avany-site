@@ -30,7 +30,7 @@ function startClock() {
 
 // ── View switcher ────────────────────────────────────────────
 function loadView(name) {
-  const views = ['dashboard', 'produtos', 'promocoes', 'pedidos', 'banners'];
+  const views = ['dashboard', 'produtos', 'promocoes', 'pedidos', 'pagamentos', 'banners'];
 
   views.forEach(v => {
     document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
@@ -41,6 +41,7 @@ function loadView(name) {
   if (name === 'produtos')   renderProductTable();
   if (name === 'promocoes')  renderPromoTable();
   if (name === 'pedidos')    renderOrdersView();
+  if (name === 'pagamentos') renderPaymentsView();
   if (name === 'banners')    renderBannerEditor();
 }
 
@@ -513,6 +514,160 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showPanel();
 });
+
+// ── Payments ─────────────────────────────────────────────────
+const PAY_TYPE_LABELS = { card:'Cartão Crédito', debit:'Cartão Débito', pix:'Pix', boleto:'Boleto', other:'Outro' };
+const PAY_ICONS       = { card:'💳', debit:'💳', pix:'⚡', boleto:'📄', other:'🏦' };
+const KNOWN_LOGOS     = { visa:'VISA', master:'MC', elo:'ELO', amex:'AMEX', hipercard:'HIPER', pix:'PIX', boleto:'BOLETO' };
+
+function renderPaymentsView() {
+  const list = Avany.payments.get();
+  document.getElementById('pay-saved-msg').style.display = 'none';
+  updatePaymentPreview(list);
+
+  document.getElementById('payments-grid').innerHTML = list.map((p, i) => {
+    const logo    = KNOWN_LOGOS[p.id] || p.name.substring(0, 5).toUpperCase();
+    const isCard  = p.type === 'card' || p.type === 'debit';
+    const isPix   = p.type === 'pix';
+    const isBoleto= p.type === 'boleto';
+
+    const extraFields = isCard ? `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;" id="pay-extra-${i}">
+        <div>
+          <label style="display:block;font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Parcelamento máx.</label>
+          <select data-pi="${i}" data-f="installments" onchange="livePreviewPayments()"
+            style="width:100%;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:6px;padding:7px 10px;font-size:12px;color:#ccc;font-family:'Inter',sans-serif;outline:none;cursor:pointer;">
+            ${[1,2,3,4,5,6,7,8,9,10,11,12].map(n=>`<option value="${n}" ${p.installments==n?'selected':''}>${n}x</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Sem juros?</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:8px;">
+            <input type="checkbox" data-pi="${i}" data-f="interestFree" onchange="livePreviewPayments()" ${p.interestFree?'checked':''} style="width:16px;height:16px;accent-color:#c9a04c;cursor:pointer;" />
+            <span style="font-size:12px;color:#888;">Sim</span>
+          </label>
+        </div>
+      </div>` : isPix ? `
+      <div style="margin-top:12px;" id="pay-extra-${i}">
+        <label style="display:block;font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Desconto Pix (%)</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="number" min="0" max="30" data-pi="${i}" data-f="discount" value="${p.discount||0}" onchange="livePreviewPayments()"
+            style="width:80px;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:6px;padding:7px 10px;font-size:13px;color:#ccc;font-family:'Inter',sans-serif;outline:none;" />
+          <span style="font-size:13px;color:#888;">% de desconto à vista</span>
+        </div>
+      </div>` : isBoleto ? `
+      <div style="margin-top:12px;" id="pay-extra-${i}">
+        <label style="display:block;font-size:10px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Vencimento (dias úteis)</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="number" min="1" max="30" data-pi="${i}" data-f="deadline" value="${p.deadline||3}" onchange="livePreviewPayments()"
+            style="width:80px;background:#0e0e0e;border:1px solid #2a2a2a;border-radius:6px;padding:7px 10px;font-size:13px;color:#ccc;font-family:'Inter',sans-serif;outline:none;" />
+          <span style="font-size:13px;color:#888;">dias úteis</span>
+        </div>
+      </div>` : '';
+
+    const isCustom = !KNOWN_LOGOS[p.id];
+
+    return `
+    <div style="background:#161616;border:1px solid ${p.active?'#c9a04c44':'#222'};border-radius:14px;padding:18px;transition:border-color .2s;" id="pay-card-${i}">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div style="width:48px;height:32px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#c9a04c;letter-spacing:.05em;flex-shrink:0;">${logo}</div>
+        <div style="flex:1;min-width:0;">
+          <p style="font-size:14px;font-weight:600;color:${p.active?'#fff':'#555'};">${p.name}</p>
+          <p style="font-size:11px;color:#555;">${PAY_TYPE_LABELS[p.type]||p.type}</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${isCustom ? `<button onclick="removePayment(${i})" title="Remover" style="background:transparent;border:none;color:#555;cursor:pointer;font-size:14px;padding:2px 6px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='#555'">✕</button>` : ''}
+          <div onclick="togglePayment(${i})" style="width:40px;height:22px;border-radius:11px;background:${p.active?'#c9a04c':'#333'};position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;">
+            <div style="position:absolute;top:3px;${p.active?'right:3px':'left:3px'};width:16px;height:16px;border-radius:50%;background:#fff;transition:all .2s;"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:${p.active?'block':'none'};" id="pay-fields-${i}">
+        ${extraFields}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updatePaymentPreview(list) {
+  const active      = (list || Avany.payments.get()).filter(p => p.active);
+  const cards       = active.filter(p => p.type === 'card' || p.type === 'debit');
+  const maxParc     = cards.length ? Math.max(...cards.map(c => +c.installments || 1)) : 0;
+  const semJuros    = cards.some(c => c.interestFree);
+  const pix         = active.find(p => p.type === 'pix');
+  const pixDisc     = pix ? (+pix.discount || 0) : 0;
+  const price       = 1529.10;
+  const installment = maxParc > 1 ? Math.round(price / maxParc * 100) / 100 : null;
+  const pixPrice    = pixDisc > 0 ? Math.round(price * (1 - pixDisc / 100) * 100) / 100 : null;
+
+  const pp = document.getElementById('prev-parc');
+  const px = document.getElementById('prev-pix');
+  const bd = document.getElementById('prev-badges');
+  if (pp) pp.textContent = installment ? `${maxParc}x de R$ ${installment.toFixed(2).replace('.',',')}${semJuros?' sem juros':''}` : '';
+  if (px) px.textContent = pixPrice ? `⚡ R$ ${pixPrice.toFixed(2).replace('.',',')} no Pix (-${pixDisc}%)` : '';
+  if (bd) bd.innerHTML   = active.map(p => {
+    const logo = KNOWN_LOGOS[p.id] || p.name.substring(0,5).toUpperCase();
+    return `<span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:4px 9px;font-size:10px;font-weight:700;color:#888;">${logo}</span>`;
+  }).join('');
+}
+
+function livePreviewPayments() {
+  updatePaymentPreview(readPaymentsFromUI());
+}
+
+function readPaymentsFromUI() {
+  const list = Avany.payments.get();
+  document.querySelectorAll('#payments-grid [data-pi]').forEach(el => {
+    const i = +el.dataset.pi;
+    const f = el.dataset.f;
+    if (!list[i]) return;
+    if (el.type === 'checkbox') list[i][f] = el.checked;
+    else if (el.type === 'number') list[i][f] = +el.value;
+    else list[i][f] = el.value;
+  });
+  return list;
+}
+
+function togglePayment(i) {
+  const list = Avany.payments.get();
+  list[i].active = !list[i].active;
+  Avany.payments.save(list);
+  renderPaymentsView();
+}
+
+function removePayment(i) {
+  if (!confirm('Remover este método de pagamento?')) return;
+  const list = Avany.payments.get();
+  list.splice(i, 1);
+  Avany.payments.save(list);
+  renderPaymentsView();
+}
+
+function savePayments() {
+  Avany.payments.save(readPaymentsFromUI());
+  const msg = document.getElementById('pay-saved-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 4000);
+  Avany.toast('✓ Métodos de pagamento salvos!');
+}
+
+function resetPayments() {
+  if (!confirm('Restaurar métodos para o padrão original?')) return;
+  Avany.payments.save(Avany.payments.defaults());
+  renderPaymentsView();
+}
+
+function addCustomPayment() {
+  const name = document.getElementById('new-pay-name').value.trim();
+  const type = document.getElementById('new-pay-type').value;
+  if (!name) { Avany.toast('Digite um nome para o método.', 'error'); return; }
+  const list = Avany.payments.get();
+  list.push({ id: 'custom-' + Date.now(), name, type, active: true, installments: type === 'card' ? 1 : undefined, interestFree: false, discount: 0 });
+  Avany.payments.save(list);
+  document.getElementById('new-pay-name').value = '';
+  renderPaymentsView();
+  Avany.toast('✓ Método "' + name + '" adicionado!');
+}
 
 // ── Orders ────────────────────────────────────────────────────
 const STATUS_LABELS = {

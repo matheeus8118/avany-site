@@ -121,7 +121,11 @@ function renderCard(product) {
   const price      = promo
     ? Math.round(product.clientPrice * (1 - product.promotion.discountPercent / 100) * 100) / 100
     : product.clientPrice;
-  const installment = Math.round(price / 12 * 100) / 100;
+  const maxParc     = Avany.payments.maxInstallments();
+  const installment = maxParc > 1 ? Math.round(price / maxParc * 100) / 100 : null;
+  const semJuros    = Avany.payments.interestFree();
+  const pixDesc     = Avany.payments.pixDiscount();
+  const pixPrice    = pixDesc > 0 ? Math.round(price * (1 - pixDesc / 100) * 100) / 100 : null;
   const stars       = Math.round(product.stars || 4);
 
   const starsHtml = '★'.repeat(stars) + '☆'.repeat(5 - stars);
@@ -144,7 +148,8 @@ function renderCard(product) {
 
       ${promo ? `<p class="price-old">${Avany.fmtPrice(product.clientPrice)}</p>` : ''}
       <p class="price-main">${Avany.fmtPrice(price)}</p>
-      <p style="font-size:11px;color:#666;">12x de ${Avany.fmtPrice(installment)}</p>
+      ${installment ? `<p style="font-size:11px;color:#666;">${maxParc}x de ${Avany.fmtPrice(installment)}${semJuros?' <span style="color:#4ade80;">sem juros</span>':''}</p>` : ''}
+      ${pixPrice ? `<p style="font-size:11px;color:#4ade80;">⚡ ${Avany.fmtPrice(pixPrice)} no Pix (-${pixDesc}%)</p>` : ''}
 
       <div class="stars" style="margin-top:6px;">
         ${starsHtml}
