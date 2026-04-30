@@ -1,0 +1,44 @@
+{
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".gitignore",
+      "*.py",
+      "requirements.txt",
+      "supabase-setup.sql",
+      "models/**",
+      "routes/**",
+      "utils/**",
+      "src/**",
+      "App.jsx",
+      "package.json",
+      "vite.config.js",
+      "node_modules/**",
+      "__pycache__/**"
+    ],
+    "rewrites": [
+      { "source": "/loja",     "destination": "/loja.html"     },
+      { "source": "/admin",    "destination": "/admin.html"    },
+      { "source": "/login",    "destination": "/login.html"    },
+      { "source": "/cadastro", "destination": "/cadastro.html" },
+      { "source": "/carrinho", "destination": "/carrinho.html" },
+      { "source": "/conta",    "destination": "/conta.html"    }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          { "key": "Cache-Control", "value": "max-age=86400" }
+        ]
+      }
+    ]
+  }
+}
