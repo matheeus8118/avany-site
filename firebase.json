@@ -1,3 +1,4 @@
+
 {
   "hosting": {
     "target": "avanymoveiseletronicos",
@@ -42,7 +43,7 @@
       {
         "source": "**/*.@(js|css)",
         "headers": [
-          { "key": "Cache-Control", "value": "max-age=86400" }
+          { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
         ]
       }
     ]
