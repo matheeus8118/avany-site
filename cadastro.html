@@ -198,7 +198,7 @@
               <input type="text" id="f-tel" class="input-field" placeholder="(00) 00000-0000" maxlength="15" oninput="maskPhone(this)" />
             </div>
 
-            <button type="button" class="btn-gold" onclick="goStep(2)" style="margin-top: 6px;">Continuar →</button>
+            <button type="button" class="btn-gold" onclick="validateStep1()" style="margin-top: 6px;">Continuar →</button>
           </div>
 
           <p style="text-align: center; font-size: 13px; color: #555; margin-top: 20px;">
@@ -248,7 +248,7 @@
 
             <div style="display: flex; gap: 10px; margin-top: 6px;">
               <button type="button" onclick="goStep(1)" style="flex: 1; padding: 13px; background: #1a1a1a; border: 1.5px solid #2a2a2a; border-radius: 10px; color: #888; font-size: 14px; font-family: 'Inter',sans-serif; cursor: pointer; transition: border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">← Voltar</button>
-              <button type="button" class="btn-gold" onclick="goStep(3)" style="flex: 2;">Continuar →</button>
+              <button type="button" class="btn-gold" onclick="validateStep2()" style="flex: 2;">Continuar →</button>
             </div>
           </div>
         </div>
@@ -293,13 +293,17 @@
           </div>
         </div>
 
-        <!-- SUCESSO -->
+        <!-- SUCESSO / VERIFICAÇÃO DE EMAIL -->
         <div class="form-step" id="form-step-done" style="text-align: center; padding: 16px 0;">
-          <div style="width: 72px; height: 72px; border-radius: 50%; background: #4ade8020; border: 2px solid #4ade80; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 34px;">✓</div>
-          <h2 style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px;">Conta criada!</h2>
-          <p style="font-size: 14px; color: #666; margin-bottom: 28px;">Bem-vindo(a) à Avany. Sua conta está pronta.</p>
-          <a href="loja.html" class="btn-gold" style="display: block; text-align: center; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: .02em; box-shadow: 0 6px 24px rgba(201,160,76,.3);">
-            Ir para a loja →
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: #c9a04c15; border: 2px solid #c9a04c66; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <svg width="34" height="34" fill="none" stroke="#c9a04c" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px;">Verifique seu email!</h2>
+          <p style="font-size: 14px; color: #666; margin-bottom: 6px;">Enviamos um link de confirmação para</p>
+          <p id="done-email" style="font-size: 15px; color: #c9a04c; font-weight: 600; margin-bottom: 16px;"></p>
+          <p style="font-size: 13px; color: #555; margin-bottom: 28px; line-height: 1.6;">Clique no link do email para <strong style="color:#ccc;">ativar sua conta</strong> antes de entrar.<br>Verifique também a pasta de spam.</p>
+          <a href="login.html" class="btn-gold" style="display: block; text-align: center; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: .02em; box-shadow: 0 6px 24px rgba(201,160,76,.3);">
+            Ir para o login →
           </a>
         </div>
 
@@ -331,30 +335,83 @@
     }
   </style>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/avany.js"></script>
   <script>
     let currentStep = 1;
+
+    // ── CPF: algoritmo oficial de validação ────────────────────
+    function validateCPF(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+      let s = 0, r;
+      for (let i = 0; i < 9; i++) s += +cpf[i] * (10 - i);
+      r = 11 - (s % 11); if (r >= 10) r = 0;
+      if (r !== +cpf[9]) return false;
+      s = 0;
+      for (let i = 0; i < 10; i++) s += +cpf[i] * (11 - i);
+      r = 11 - (s % 11); if (r >= 10) r = 0;
+      return r === +cpf[10];
+    }
+
+    // ── Helpers de erro por campo ──────────────────────────────
+    function fieldErr(id, msg) {
+      const el = document.getElementById(id);
+      el.classList.add('error');
+      let e = el.closest('div').querySelector('.f-err');
+      if (!e) { e = document.createElement('p'); e.className = 'f-err'; e.style.cssText = 'font-size:11px;color:#f87171;margin-top:4px;'; el.closest('div').appendChild(e); }
+      e.textContent = msg;
+      el.focus();
+    }
+    function fieldOk(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('error');
+      const e = el.closest('div').querySelector('.f-err');
+      if (e) e.textContent = '';
+    }
+
+    // ── Validação passo 1 ──────────────────────────────────────
+    function validateStep1() {
+      const nome = document.getElementById('f-nome').value.trim();
+      const cpf  = document.getElementById('f-cpf').value.trim();
+      const nasc = document.getElementById('f-nasc').value.trim();
+      const tel  = document.getElementById('f-tel').value.trim();
+
+      if (!nome) { fieldErr('f-nome', 'Informe seu nome'); return; } fieldOk('f-nome');
+      if (!cpf)  { fieldErr('f-cpf',  'Informe seu CPF');  return; }
+      if (!validateCPF(cpf)) { fieldErr('f-cpf', 'CPF inválido — verifique os dígitos'); return; } fieldOk('f-cpf');
+      if (nasc.length < 10)  { fieldErr('f-nasc', 'Data de nascimento inválida'); return; } fieldOk('f-nasc');
+      if (tel.replace(/\D/g,'').length < 10) { fieldErr('f-tel', 'Telefone inválido'); return; } fieldOk('f-tel');
+
+      goStep(2);
+    }
+
+    // ── Validação passo 2 ──────────────────────────────────────
+    function validateStep2() {
+      const email  = document.getElementById('f-email').value.trim();
+      const senha  = document.getElementById('f-senha').value;
+      const senha2 = document.getElementById('f-senha2').value;
+
+      if (!email || !email.includes('@')) { fieldErr('f-email', 'Email inválido'); return; } fieldOk('f-email');
+      if (senha.length < 6) { fieldErr('f-senha', 'Senha deve ter pelo menos 6 caracteres'); return; } fieldOk('f-senha');
+      if (senha !== senha2) { fieldErr('f-senha2', 'Senhas não coincidem'); return; } fieldOk('f-senha2');
+
+      goStep(3);
+    }
 
     function goStep(n) {
       document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
       document.getElementById('form-step-' + n).classList.add('active');
-
-      // Steps indicator
       [1,2,3].forEach(i => {
         const el = document.getElementById('step-' + i);
         el.classList.remove('active','done');
-        if (i < n) el.classList.add('done'), el.textContent = '✓';
-        else if (i === n) el.classList.add('active'), el.textContent = i;
+        if (i < n) { el.classList.add('done'); el.textContent = '✓'; }
+        else if (i === n) { el.classList.add('active'); el.textContent = i; }
         else el.textContent = i;
       });
-      [1,2].forEach(i => {
-        const line = document.getElementById('line-' + i);
-        line.classList.toggle('done', i < n);
-      });
-
-      // Mostrar painel de benefícios a partir do passo 2
+      [1,2].forEach(i => document.getElementById('line-' + i).classList.toggle('done', i < n));
       const panel = document.getElementById('benefits-panel');
       if (window.innerWidth >= 768) panel.style.display = n >= 2 ? 'block' : 'none';
-
       currentStep = n;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -366,21 +423,17 @@
     }
 
     function checkStrength(val) {
-      let score = 0;
-      if (val.length >= 8) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[^A-Za-z0-9]/.test(val)) score++;
-
+      let s = 0;
+      if (val.length >= 8) s++;
+      if (/[A-Z]/.test(val)) s++;
+      if (/[0-9]/.test(val)) s++;
+      if (/[^A-Za-z0-9]/.test(val)) s++;
       const colors = ['#f87171','#fb923c','#facc15','#4ade80'];
       const labels = ['Muito fraca','Fraca','Razoável','Forte'];
-      for (let i = 1; i <= 4; i++) {
-        const bar = document.getElementById('sb' + i);
-        bar.style.background = i <= score ? colors[score - 1] : '#222';
-      }
+      for (let i = 1; i <= 4; i++) document.getElementById('sb'+i).style.background = i <= s ? colors[s-1] : '#222';
       const lbl = document.getElementById('strength-label');
-      lbl.textContent = val.length ? labels[score - 1] || '' : '';
-      lbl.style.color = val.length ? colors[score - 1] : '#555';
+      lbl.textContent = val.length ? labels[s-1] || '' : '';
+      lbl.style.color = val.length ? colors[s-1] : '#555';
     }
 
     function checkMatch() {
@@ -395,61 +448,83 @@
 
     function maskCPF(el) {
       let v = el.value.replace(/\D/g,'');
-      if (v.length > 3) v = v.slice(0,3) + '.' + v.slice(3);
-      if (v.length > 7) v = v.slice(0,7) + '.' + v.slice(7);
-      if (v.length > 11) v = v.slice(0,11) + '-' + v.slice(11);
+      if (v.length > 3) v = v.slice(0,3)+'.'+v.slice(3);
+      if (v.length > 7) v = v.slice(0,7)+'.'+v.slice(7);
+      if (v.length > 11) v = v.slice(0,11)+'-'+v.slice(11);
       el.value = v.slice(0,14);
     }
-
     function maskDate(el) {
       let v = el.value.replace(/\D/g,'');
-      if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
-      if (v.length > 5) v = v.slice(0,5) + '/' + v.slice(5);
+      if (v.length > 2) v = v.slice(0,2)+'/'+v.slice(2);
+      if (v.length > 5) v = v.slice(0,5)+'/'+v.slice(5);
       el.value = v.slice(0,10);
     }
-
     function maskPhone(el) {
       let v = el.value.replace(/\D/g,'');
-      if (v.length > 0) v = '(' + v;
-      if (v.length > 3) v = v.slice(0,3) + ') ' + v.slice(3);
-      if (v.length > 10) v = v.slice(0,10) + '-' + v.slice(10);
+      if (v.length > 0) v = '('+v;
+      if (v.length > 3) v = v.slice(0,3)+') '+v.slice(3);
+      if (v.length > 10) v = v.slice(0,10)+'-'+v.slice(10);
       el.value = v.slice(0,15);
     }
-
     function toggleInterest(el) { el.classList.toggle('selected'); }
 
-    function handleRegister() {
+    // ── Cadastro via Supabase ──────────────────────────────────
+    async function handleRegister() {
       const terms = document.getElementById('chk-terms');
       if (!terms.checked) {
         terms.style.outline = '2px solid #f87171';
         setTimeout(() => terms.style.outline = '', 2000);
         return;
       }
+
+      const nome      = document.getElementById('f-nome').value.trim();
+      const sobrenome = document.getElementById('f-sobrenome').value.trim();
+      const email     = document.getElementById('f-email').value.trim();
+      const password  = document.getElementById('f-senha').value;
+      const cpf       = document.getElementById('f-cpf').value.replace(/\D/g,'');
+      const phone     = document.getElementById('f-tel').value.replace(/\D/g,'');
+      const birthdate = document.getElementById('f-nasc').value;
+
       const btn = document.getElementById('btn-register');
       btn.textContent = 'Criando conta…';
       btn.style.opacity = '.7';
-      setTimeout(() => {
-        // Salva sessão via Avany.auth
-        const nome     = document.getElementById('f-nome').value.trim();
-        const sobrenome= document.getElementById('f-sobrenome').value.trim();
-        const email    = document.getElementById('f-email').value.trim();
-        Avany.auth.set({ name: (nome + ' ' + sobrenome).trim() || 'Usuário', email });
+      btn.disabled = true;
+
+      // Remove erro anterior
+      const oldErr = document.getElementById('reg-err');
+      if (oldErr) oldErr.remove();
+
+      try {
+        await Avany.auth.register(email, password, {
+          full_name: (nome + ' ' + sobrenome).trim(),
+          cpf, phone, birthdate,
+        });
+
+        document.getElementById('done-email').textContent = email;
         document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
         document.getElementById('form-step-done').classList.add('active');
         document.getElementById('steps').style.display = 'none';
-      }, 1500);
+      } catch (err) {
+        let msg = err.message;
+        if (msg.includes('already registered') || msg.includes('already been registered')) msg = 'Este email já está cadastrado. Tente entrar ou recuperar a senha.';
+
+        const errEl = document.createElement('p');
+        errEl.id = 'reg-err';
+        errEl.style.cssText = 'font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;margin-top:4px;';
+        errEl.textContent = msg;
+        btn.before(errEl);
+
+        btn.textContent = 'Criar Conta';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
     }
 
-    // Mostrar painel lateral no desktop
     window.addEventListener('resize', () => {
       const panel = document.getElementById('benefits-panel');
-      if (window.innerWidth >= 768 && currentStep >= 2) panel.style.display = 'block';
-      else panel.style.display = 'none';
+      panel.style.display = (window.innerWidth >= 768 && currentStep >= 2) ? 'block' : 'none';
     });
-  </script>
-  <script src="js/avany.js"></script>
-  <script>
-    // Se já estiver logado, vai direto para a loja
+
     document.addEventListener('DOMContentLoaded', () => {
       if (Avany.auth.get()) window.location.href = 'loja.html';
     });

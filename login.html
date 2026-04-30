@@ -151,7 +151,10 @@
       <!-- Card -->
       <div class="card">
         <h1 style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px;">Bem-vindo de volta</h1>
-        <p style="font-size: 14px; color: #666; margin-bottom: 28px;">Entre na sua conta para continuar</p>
+        <p id="card-subtitle" style="font-size: 14px; color: #666; margin-bottom: 28px;">Entre na sua conta para continuar</p>
+
+        <!-- ===== PAINEL PRINCIPAL ===== -->
+        <div id="login-main">
 
         <!-- Botões sociais -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px;">
@@ -182,7 +185,7 @@
           <div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
               <label style="font-size: 11px; font-weight: 600; color: #777; text-transform: uppercase; letter-spacing: .1em;">Senha</label>
-              <a href="#" onclick="forgotPassword(event)" style="font-size: 12px; color: #c9a04c;">Esqueci a senha</a>
+              <a href="#" onclick="showForgot(event)" style="font-size: 12px; color: #c9a04c;">Esqueci a senha</a>
             </div>
             <div style="position: relative;">
               <input type="password" id="pwd" class="input-field" placeholder="••••••••" required style="padding-right: 44px;" />
@@ -209,6 +212,27 @@
           Não tem conta?
           <a href="cadastro.html" style="color: #c9a04c; font-weight: 600;">Criar conta grátis →</a>
         </p>
+        </div><!-- /login-main -->
+
+        <!-- ===== PAINEL ESQUECI A SENHA ===== -->
+        <div id="forgot-wrap" style="display:none;">
+          <div style="text-align:center;margin-bottom:22px;">
+            <div style="width:52px;height:52px;border-radius:50%;background:#c9a04c15;border:1.5px solid #c9a04c55;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+              <svg width="22" height="22" fill="none" stroke="#c9a04c" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            </div>
+            <h2 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;">Redefinir senha</h2>
+            <p style="font-size:13px;color:#666;">Enviaremos um link para seu email</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:600;color:#777;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Email</label>
+              <input type="email" id="forgot-email" class="input-field" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')sendReset()" />
+            </div>
+            <p id="forgot-msg" style="display:none;font-size:12px;border-radius:8px;padding:9px 12px;border:1px solid;"></p>
+            <button type="button" class="btn-gold" id="btn-send-reset" onclick="sendReset()">Enviar link de redefinição</button>
+            <button type="button" onclick="hideForgot()" style="background:none;border:none;color:#c9a04c;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;padding:6px;text-align:center;">← Voltar ao login</button>
+          </div>
+        </div>
       </div>
 
       <a href="loja.html" style="margin-top: 20px; font-size: 13px; color: #444; display: flex; align-items: center; gap: 6px;">
@@ -227,34 +251,55 @@
   <script src="js/avany.js"></script>
   <script>
     function togglePwd(id, btn) {
-      const input  = document.getElementById(id);
-      const isText = input.type === 'text';
-      input.type   = isText ? 'password' : 'text';
-      btn.querySelector('svg').style.opacity = isText ? '1' : '.5';
+      const input = document.getElementById(id);
+      input.type  = input.type === 'text' ? 'password' : 'text';
+      btn.querySelector('svg').style.opacity = input.type === 'text' ? '.5' : '1';
     }
 
-    async function forgotPassword(e) {
+    function showForgot(e) {
       e.preventDefault();
-      const emailInput = document.querySelector('input[type="email"]');
-      const email = emailInput?.value.trim() || '';
-      const errEl = document.getElementById('login-err');
+      const emailVal = document.querySelector('#login-main input[type="email"]')?.value.trim() || '';
+      document.getElementById('login-main').style.display   = 'none';
+      document.getElementById('forgot-wrap').style.display  = 'block';
+      document.getElementById('card-subtitle').textContent  = 'Recuperação de senha';
+      if (emailVal) document.getElementById('forgot-email').value = emailVal;
+      document.getElementById('forgot-msg').style.display   = 'none';
+      document.getElementById('btn-send-reset').style.display = 'block';
+      document.getElementById('btn-send-reset').disabled    = false;
+      document.getElementById('btn-send-reset').textContent = 'Enviar link de redefinição';
+    }
 
-      const entered = email || prompt('Digite seu email para redefinir a senha:');
-      if (!entered) return;
+    function hideForgot() {
+      document.getElementById('login-main').style.display  = 'block';
+      document.getElementById('forgot-wrap').style.display = 'none';
+      document.getElementById('card-subtitle').textContent = 'Entre na sua conta para continuar';
+    }
 
-      const sb = Avany.sb();
-      if (!sb) { alert('Supabase não configurado.'); return; }
+    async function sendReset() {
+      const email = document.getElementById('forgot-email').value.trim();
+      const msg   = document.getElementById('forgot-msg');
+      const btn   = document.getElementById('btn-send-reset');
 
-      const { error } = await sb.auth.resetPasswordForEmail(entered, {
-        redirectTo: window.location.origin + '/login.html'
-      });
+      if (!email) {
+        msg.style.cssText = 'display:block;font-size:12px;color:#f87171;background:#2a1010;border-color:#f8717133;border-radius:8px;padding:9px 12px;border:1px solid;';
+        msg.textContent   = 'Digite seu email.';
+        return;
+      }
 
-      if (error) {
-        errEl.textContent   = 'Erro ao enviar email: ' + error.message;
-        errEl.style.display = 'block';
-      } else {
-        errEl.style.cssText = 'display:block;color:#4ade80;background:#0d1f0d;border-color:#4ade8055;';
-        errEl.textContent   = '✓ Email de redefinição enviado para ' + entered;
+      btn.textContent = 'Enviando…';
+      btn.disabled    = true;
+      msg.style.display = 'none';
+
+      try {
+        await Avany.auth.resetPassword(email);
+        msg.style.cssText = 'display:block;font-size:12px;color:#4ade80;background:#0d1f0d;border-color:#4ade8055;border-radius:8px;padding:9px 12px;border:1px solid;';
+        msg.textContent   = '✓ Link enviado para ' + email + '. Verifique sua caixa de entrada (e o spam).';
+        btn.style.display = 'none';
+      } catch (err) {
+        msg.style.cssText = 'display:block;font-size:12px;color:#f87171;background:#2a1010;border-color:#f8717133;border-radius:8px;padding:9px 12px;border:1px solid;';
+        msg.textContent   = 'Erro: ' + err.message;
+        btn.textContent   = 'Enviar link de redefinição';
+        btn.disabled      = false;
       }
     }
 
@@ -276,11 +321,11 @@
         const isAdmin = await Avany.auth.login(email, pw);
         window.location.href = isAdmin ? 'admin.html' : 'loja.html';
       } catch (err) {
-        const msg = err.message === 'Invalid login credentials'
-          ? 'Email ou senha inválidos.'
-          : err.message;
+        let msg = err.message;
+        if (msg === 'Invalid login credentials') msg = 'Email ou senha inválidos.';
+        else if (msg.includes('Email not confirmed')) msg = 'Confirme seu email antes de entrar. Verifique sua caixa de entrada.';
         errEl.textContent   = msg;
-        errEl.style.display = 'block';
+        errEl.style.cssText = 'display:block;font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;';
         btn.textContent     = 'Entrar na conta';
         btn.style.opacity   = '1';
         btn.disabled        = false;

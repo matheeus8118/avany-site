@@ -101,6 +101,30 @@ const Avany = (function () {
       try { return this.get()?.isAdmin === true; }
       catch { return false; }
     },
+
+    async register(email, password, meta = {}) {
+      const sb = _sb();
+      if (!sb) throw new Error('Supabase não configurado.');
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password,
+        options: {
+          data: meta,
+          emailRedirectTo: 'https://avanymoveiseletronicos.web.app/login.html',
+        },
+      });
+      if (error) throw error;
+      return data;
+    },
+
+    async resetPassword(email) {
+      const sb = _sb();
+      if (!sb) throw new Error('Supabase não configurado.');
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://avanymoveiseletronicos.web.app/login.html',
+      });
+      if (error) throw error;
+    },
   };
 
   // ── PRODUCTS ────────────────────────────────────────────────
