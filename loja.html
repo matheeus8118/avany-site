@@ -180,93 +180,8 @@
 
   <main style="max-width:1280px; margin:0 auto; padding:24px;">
 
-    <!-- HERO BANNER -->
-    <div style="position:relative; border-radius:16px; overflow:hidden; margin-bottom:28px; height:320px;" id="banner">
-
-      <!-- Slide 1 -->
-      <div class="banner-slide active" id="slide-1" style="height:320px; border-radius:16px; overflow:hidden; position:relative; align-items:center;">
-        <div class="geo-bg" style="width:100%; height:100%; display:flex; align-items:center; padding:40px 60px; gap:40px; border:1px solid #c9a04c33;">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 30% 50%,#c9a04c14,transparent);pointer-events:none;"></div>
-          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#c9a04c,transparent);"></div>
-          <div style="position:absolute;bottom:0;left:0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#c9a04c44,transparent);"></div>
-          <div style="flex:1; position:relative; z-index:1;">
-            <div style="display:inline-flex;align-items:center;gap:8px;background:#c9a04c18;border:1px solid #c9a04c44;border-radius:999px;padding:4px 12px;font-size:11px;color:var(--gold);margin-bottom:16px;">⚡ Oferta por tempo limitado</div>
-            <h2 style="font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; line-height:1; color:#fff; margin-bottom:6px;">Festival de</h2>
-            <h2 style="font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:700; line-height:1; margin-bottom:16px;" class="gold-text">Eletro</h2>
-            <p style="font-size:15px; color:#888; margin-bottom:8px;">Cupons de até</p>
-            <p style="font-size:42px; font-weight:800; color:#fff; line-height:1; margin-bottom:4px;">R$ <span class="gold-text">500</span></p>
-            <p style="font-size:13px; color:#4ade80; margin-bottom:24px;">+ Frete grátis em todo o site*</p>
-            <button class="btn-gold" onclick="filterCatalog('all')" style="padding:12px 28px; font-size:14px; border-radius:10px; box-shadow:0 6px 20px #c9a04c30;">Ver Ofertas →</button>
-          </div>
-          <div style="display:flex; gap:16px; align-items:center; position:relative; z-index:1;">
-            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:140px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
-              <span style="font-size:60px;">🖥️</span><span style="font-size:12px;font-weight:700;color:#fff;">Smart TV 55"</span><span style="font-size:11px;color:var(--gold);">R$ 2.499,00</span>
-            </div>
-            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:140px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
-              <span style="font-size:70px;">❄️</span><span style="font-size:12px;font-weight:700;color:#fff;">Geladeira 480L</span><span style="font-size:11px;color:var(--gold);">R$ 3.899,00</span>
-            </div>
-            <div style="background:#1e1e1e;border:1px solid #2e2e2e;border-radius:16px;width:130px;height:155px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
-              <span style="font-size:55px;">🍟</span><span style="font-size:12px;font-weight:700;color:#fff;">Air Fryer 5L</span><span style="font-size:11px;color:var(--gold);">R$ 349,90</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 2 -->
-      <div class="banner-slide" id="slide-2" style="height:320px; border-radius:16px; overflow:hidden; position:relative;">
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0a1628,#112244,#1a2f4a);display:flex;align-items:center;padding:40px 60px;gap:40px;border:1px solid #1e4080;">
-          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#4488ff,transparent);"></div>
-          <div style="flex:1;z-index:1;">
-            <div style="display:inline-flex;align-items:center;gap:8px;background:#4488ff18;border:1px solid #4488ff44;border-radius:999px;padding:4px 12px;font-size:11px;color:#6699ff;margin-bottom:16px;">🆕 Lançamento</div>
-            <h2 style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:#fff;line-height:1;margin-bottom:6px;">Novos</h2>
-            <h2 style="font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:700;color:#6699ff;line-height:1;margin-bottom:16px;">Smartphones</h2>
-            <p style="font-size:15px;color:#668;margin-bottom:8px;">A partir de</p>
-            <p style="font-size:42px;font-weight:800;color:#fff;line-height:1;margin-bottom:24px;">R$ <span style="color:#6699ff;">899,90</span></p>
-            <button onclick="filterCatalog('Celulares')" style="background:linear-gradient(135deg,#4466cc,#6699ff);color:#fff;font-weight:600;border:none;border-radius:10px;padding:12px 28px;font-size:14px;cursor:pointer;">Ver Lançamentos →</button>
-          </div>
-          <div style="display:flex;gap:16px;align-items:center;z-index:1;">
-            <div style="background:#0d1e38;border:1px solid #1e3a6a;border-radius:16px;width:140px;height:165px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
-              <span style="font-size:60px;">📱</span><span style="font-size:12px;font-weight:700;color:#fff;">iPhone 15</span><span style="font-size:11px;color:#6699ff;">R$ 4.999,00</span>
-            </div>
-            <div style="background:#0d1e38;border:1px solid #1e3a6a;border-radius:16px;width:150px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
-              <span style="font-size:68px;">📲</span><span style="font-size:12px;font-weight:700;color:#fff;">Samsung S24</span><span style="font-size:11px;color:#6699ff;">R$ 3.799,00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 3 -->
-      <div class="banner-slide" id="slide-3" style="height:320px;border-radius:16px;overflow:hidden;position:relative;">
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0e1a10,#152a18,#1a3a1e);display:flex;align-items:center;padding:40px 60px;gap:40px;border:1px solid #2a5a30;">
-          <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#4ade80,transparent);"></div>
-          <div style="flex:1;z-index:1;">
-            <div style="display:inline-flex;align-items:center;gap:8px;background:#4ade8018;border:1px solid #4ade8044;border-radius:999px;padding:4px 12px;font-size:11px;color:#4ade80;margin-bottom:16px;">🛋️ Estoque limitado</div>
-            <h2 style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:#fff;line-height:1;margin-bottom:6px;">Móveis</h2>
-            <h2 style="font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:700;color:#4ade80;line-height:1;margin-bottom:16px;">Premium</h2>
-            <p style="font-size:15px;color:#4a6a4a;margin-bottom:8px;">Até <span style="font-weight:700;color:#4ade80;font-size:20px;">40% OFF</span></p>
-            <p style="font-size:14px;color:#4a6a4a;margin-bottom:24px;">+ Montagem grátis em SP</p>
-            <button onclick="filterCatalog('Móveis')" style="background:linear-gradient(135deg,#2a8a40,#4ade80);color:#111;font-weight:600;border:none;border-radius:10px;padding:12px 28px;font-size:14px;cursor:pointer;">Ver Móveis →</button>
-          </div>
-          <div style="display:flex;gap:16px;align-items:center;z-index:1;">
-            <div style="background:#0d1e10;border:1px solid #2a4a2a;border-radius:16px;width:145px;height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
-              <span style="font-size:62px;">🛋️</span><span style="font-size:12px;font-weight:700;color:#fff;">Sofá Retrátil</span><span style="font-size:11px;color:#4ade80;">R$ 1.899,00</span>
-            </div>
-            <div style="background:#0d1e10;border:1px solid #2a4a2a;border-radius:16px;width:145px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
-              <span style="font-size:66px;">🪑</span><span style="font-size:12px;font-weight:700;color:#fff;">Cadeira Gamer</span><span style="font-size:11px;color:#4ade80;">R$ 999,00</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dots -->
-      <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;">
-        <button onclick="goSlide(1)" id="dot-1" style="width:24px;height:6px;border-radius:3px;border:none;cursor:pointer;background:var(--gold);transition:all .2s;"></button>
-        <button onclick="goSlide(2)" id="dot-2" style="width:8px;height:6px;border-radius:3px;border:none;cursor:pointer;background:#444;transition:all .2s;"></button>
-        <button onclick="goSlide(3)" id="dot-3" style="width:8px;height:6px;border-radius:3px;border:none;cursor:pointer;background:#444;transition:all .2s;"></button>
-      </div>
-      <button onclick="prevSlide()" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">‹</button>
-      <button onclick="nextSlide()" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">›</button>
-    </div>
+    <!-- HERO BANNER (renderizado via JS a partir de Avany.banners) -->
+    <div id="banner" style="position:relative;border-radius:16px;overflow:hidden;margin-bottom:28px;height:320px;"></div>
 
     <!-- MINI BANNERS -->
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:32px;">
@@ -389,19 +304,77 @@
 
   <!-- Banner slider script -->
   <script>
-    let current = 1;
-    const total = 3;
+    let _bannerTotal = 3, _bannerCurrent = 1;
+
+    const _THEMES = {
+      gold:  { bg:'linear-gradient(135deg,#161000,#0e0e0e)', border:'#c9a04c33', accent:'#c9a04c', badgeBg:'#c9a04c18', badgeBorder:'#c9a04c44', cardBg:'#1e1e1e', cardBorder:'#2e2e2e', topLine:'linear-gradient(90deg,transparent,#c9a04c,transparent)', btnStyle:'background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;box-shadow:0 6px 20px #c9a04c30;' },
+      blue:  { bg:'linear-gradient(135deg,#0a1628,#112244,#1a2f4a)', border:'#1e4080', accent:'#6699ff', badgeBg:'#4488ff18', badgeBorder:'#4488ff44', cardBg:'#0d1e38', cardBorder:'#1e3a6a', topLine:'linear-gradient(90deg,transparent,#4488ff,transparent)', btnStyle:'background:linear-gradient(135deg,#4466cc,#6699ff);color:#fff;' },
+      green: { bg:'linear-gradient(135deg,#0e1a10,#152a18,#1a3a1e)', border:'#2a5a30', accent:'#4ade80', badgeBg:'#4ade8018', badgeBorder:'#4ade8044', cardBg:'#0d1e10', cardBorder:'#2a4a2a', topLine:'linear-gradient(90deg,transparent,#4ade80,transparent)', btnStyle:'background:linear-gradient(135deg,#2a8a40,#4ade80);color:#111;' },
+    };
+
+    function renderBanners() {
+      const all    = (typeof Avany !== 'undefined') ? Avany.banners.get() : [];
+      const active = all.filter(b => b.active);
+      const wrap   = document.getElementById('banner');
+      if (!wrap) return;
+
+      if (active.length === 0) { wrap.style.display = 'none'; return; }
+      wrap.style.display = '';
+      _bannerTotal   = active.length;
+      _bannerCurrent = 1;
+
+      const heights = [160, 180, 155];
+
+      const slidesHtml = active.map((b, idx) => {
+        const t  = _THEMES[b.theme] || _THEMES.gold;
+        const n  = idx + 1;
+        const prods = (b.products || []).map((p, pi) =>
+          `<div style="background:${t.cardBg};border:1px solid ${t.cardBorder};border-radius:16px;width:140px;height:${heights[pi]||165}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 30px rgba(0,0,0,.5);">
+            <span style="font-size:60px;">${p.emoji}</span>
+            <span style="font-size:12px;font-weight:700;color:#fff;">${p.name}</span>
+            <span style="font-size:11px;color:${t.accent};">${p.price}</span>
+          </div>`
+        ).join('');
+
+        return `<div class="banner-slide${n===1?' active':''}" id="slide-${n}" style="height:320px;border-radius:16px;overflow:hidden;position:relative;${n===1?'align-items:center;':''}">
+          <div style="width:100%;height:100%;background:${t.bg};display:flex;align-items:center;padding:40px 60px;gap:40px;border:1px solid ${t.border};">
+            <div style="position:absolute;top:0;left:0;width:100%;height:2px;background:${t.topLine};"></div>
+            <div style="flex:1;z-index:1;">
+              <div style="display:inline-flex;align-items:center;gap:8px;background:${t.badgeBg};border:1px solid ${t.badgeBorder};border-radius:999px;padding:4px 12px;font-size:11px;color:${t.accent};margin-bottom:16px;">${b.badge}</div>
+              <h2 style="font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:700;color:#fff;line-height:1;margin-bottom:6px;">${b.title1}</h2>
+              <h2 style="font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:700;color:${t.accent};line-height:1;margin-bottom:16px;">${b.title2}</h2>
+              <p style="font-size:15px;color:#888;margin-bottom:8px;">${b.subtitle}</p>
+              ${b.price    ? `<p style="font-size:42px;font-weight:800;color:#fff;line-height:1;margin-bottom:${b.priceNote?'4px':'24px'};">${b.price}</p>` : ''}
+              ${b.priceNote? `<p style="font-size:13px;color:${t.accent};margin-bottom:24px;">${b.priceNote}</p>` : ''}
+              <button onclick="filterCatalog('${b.btnFilter||'all'}')" style="${t.btnStyle}font-weight:600;border:none;border-radius:10px;padding:12px 28px;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;">${b.btnText}</button>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;z-index:1;">${prods}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      const dotsHtml = active.map((_, idx) => {
+        const n = idx + 1;
+        return `<button onclick="goSlide(${n})" id="dot-${n}" style="width:${n===1?'24px':'8px'};height:6px;border-radius:3px;border:none;cursor:pointer;background:${n===1?'var(--gold)':'#444'};transition:all .2s;"></button>`;
+      }).join('');
+
+      wrap.innerHTML = slidesHtml
+        + `<div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10;">${dotsHtml}</div>`
+        + `<button onclick="prevSlide()" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">‹</button>`
+        + `<button onclick="nextSlide()" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:#111a;border:1px solid #333;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(4px);">›</button>`;
+    }
+
     function goSlide(n) {
       document.querySelectorAll('.banner-slide').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('[id^="dot-"]').forEach(d => { d.style.background='#444'; d.style.width='8px'; });
-      current = n;
-      document.getElementById('slide-' + n).classList.add('active');
-      const dot = document.getElementById('dot-' + n);
-      dot.style.background = 'var(--gold)';
-      dot.style.width = '24px';
+      _bannerCurrent = n;
+      const sl = document.getElementById('slide-' + n);
+      const dt = document.getElementById('dot-'   + n);
+      if (sl) sl.classList.add('active');
+      if (dt) { dt.style.background = 'var(--gold)'; dt.style.width = '24px'; }
     }
-    function nextSlide() { goSlide(current === total ? 1 : current + 1); }
-    function prevSlide() { goSlide(current === 1 ? total : current - 1); }
+    function nextSlide() { goSlide(_bannerCurrent === _bannerTotal ? 1 : _bannerCurrent + 1); }
+    function prevSlide() { goSlide(_bannerCurrent === 1 ? _bannerTotal : _bannerCurrent - 1); }
     setInterval(nextSlide, 5000);
   </script>
 

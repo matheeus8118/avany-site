@@ -221,6 +221,20 @@ const Avany = (function () {
     },
   };
 
+  // ── BANNERS ─────────────────────────────────────────────────
+  const BANNERS_KEY = 'avany_banners';
+  const BANNER_DEFAULTS = [
+    { active:true, theme:'gold',  badge:'⚡ Oferta por tempo limitado', title1:'Festival de',  title2:'Eletro',       subtitle:'Cupons de até',  price:'R$ 500',    priceNote:'+ Frete grátis em todo o site*', btnText:'Ver Ofertas →',      btnFilter:'all',      products:[{emoji:'🖥️',name:'Smart TV 55"',    price:'R$ 2.499,00'},{emoji:'❄️', name:'Geladeira 480L',price:'R$ 3.899,00'},{emoji:'🍟',name:'Air Fryer 5L',  price:'R$ 349,90'}] },
+    { active:true, theme:'blue',  badge:'🆕 Lançamento',                title1:'Novos',        title2:'Smartphones',  subtitle:'A partir de',    price:'R$ 899,90', priceNote:'',                               btnText:'Ver Lançamentos →', btnFilter:'Celulares', products:[{emoji:'📱',name:'iPhone 15',       price:'R$ 4.999,00'},{emoji:'📲',name:'Samsung S24',  price:'R$ 3.799,00'}] },
+    { active:true, theme:'green', badge:'🛋️ Estoque limitado',           title1:'Móveis',       title2:'Premium',      subtitle:'Até 40% OFF',    price:'',          priceNote:'+ Montagem grátis em SP',        btnText:'Ver Móveis →',      btnFilter:'Móveis',   products:[{emoji:'🛋️',name:'Sofá Retrátil',  price:'R$ 1.899,00'},{emoji:'🪑',name:'Cadeira Gamer',price:'R$ 999,00'}] },
+  ];
+
+  const banners = {
+    get()       { try { return JSON.parse(localStorage.getItem(BANNERS_KEY)) || BANNER_DEFAULTS; } catch { return BANNER_DEFAULTS; } },
+    save(data)  { localStorage.setItem(BANNERS_KEY, JSON.stringify(data)); },
+    defaults()  { return JSON.parse(JSON.stringify(BANNER_DEFAULTS)); },
+  };
+
   // ── CART ────────────────────────────────────────────────────
   const cart = {
     get() {
@@ -364,7 +378,7 @@ const Avany = (function () {
   }
 
   // ── PUBLIC API ──────────────────────────────────────────────
-  return { auth, cart, products, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
+  return { auth, cart, products, banners, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
 })();
 
 // Auto-init

@@ -30,7 +30,7 @@ function startClock() {
 
 // ── View switcher ────────────────────────────────────────────
 function loadView(name) {
-  const views = ['dashboard', 'produtos', 'promocoes'];
+  const views = ['dashboard', 'produtos', 'promocoes', 'banners'];
 
   views.forEach(v => {
     document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
@@ -40,6 +40,7 @@ function loadView(name) {
   if (name === 'dashboard')  renderDashboard();
   if (name === 'produtos')   renderProductTable();
   if (name === 'promocoes')  renderPromoTable();
+  if (name === 'banners')    renderBannerEditor();
 }
 
 // ── Dashboard ────────────────────────────────────────────────
@@ -511,3 +512,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showPanel();
 });
+
+// ── Banner Editor ─────────────────────────────────────────────
+function renderBannerEditor() {
+  const data  = Avany.banners.get();
+  const names = ['Slide 1 — Dourado', 'Slide 2 — Azul', 'Slide 3 — Verde'];
+  const themes = ['gold', 'blue', 'green'];
+
+  document.getElementById('banner-saved-msg').style.display = 'none';
+  document.getElementById('banner-editor').innerHTML = data.map((b, i) => {
+    const prods = (b.products || [{emoji:'',name:'',price:''},{emoji:'',name:'',price:''}]).map((p, pi) => `
+      <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:8px;align-items:center;">
+        <input type="text" value="${p.emoji}" placeholder="📱" data-bi="${i}" data-pi="${pi}" data-f="emoji"
+          style="background:#111;border:1.5px solid #2a2a2a;border-radius:8px;padding:8px;font-size:20px;text-align:center;color:#e0e0e0;outline:none;font-family:Inter,sans-serif;" />
+        <input type="text" value="${p.name}" placeholder="Nome do produto" data-bi="${i}" data-pi="${pi}" data-f="name"
+          style="background:#111;border:1.5px solid #2a2a2a;border-radius:8px;padding:8px 12px;font-size:13px;color:#e0e0e0;outline:none;font-family:Inter,sans-serif;" />
+        <input type="text" value="${p.price}" placeholder="R$ 0,00" data-bi="${i}" data-pi="${pi}" data-f="price"
+          style="background:#111;border:1.5px solid #2a2a2a;border-radius:8px;padding:8px 12px;font-size:13px;color:#e0e0e0;outline:none;font-family:Inter,sans-serif;" />
+      </div>`).join('');
+
+    return `
+    <div style="background:#161616;border:1px solid ${b.active?'#c9a04c44':'#222'};border-radius:16px;overflow:hidden;" id="banner-card-${i}">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:#1a1a1a;border-bottom:1px solid #222;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span style="font-size:15px;font-weight:600;color:${b.active?'#fff':'#555'};">${names[i]||'Slide '+(i+1)}</span>
+          ${b.active
+            ? '<span style="font-size:11px;background:#0d1f0d;color:#4ade80;border:1px solid #4ade8033;border-radius:20px;padding:3px 10px;">● Ativo</span>'
+            : '<span style="font-size:11px;background:#1a1a1a;color:#555;border:1px solid #333;border-radius:20px;padding:3px 10px;">○ Inativo</span>'}
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#888;">
+          <span>${b.active ? 'Desativar' : 'Ativar'}</span>
+          <div onclick="toggleBanner(${i})" style="width:44px;height:24px;border-radius:12px;background:${b.active?'#c9a04c':'#333'};position:relative;cursor:pointer;transition:background .2s;">
+            <div style="position:absolute;top:3px;${b.active?'right:3px':'left:3px'};width:18px;height:18px;border-radius:50%;background:#fff;transition:all .2s;"></div>
+          </div>
+        </label>
+      </div>
+
+      <div style="padding:20px;display:${b.active?'flex':'none'};flex-direction:column;gap:16px;" id="banner-fields-${i}">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          ${bannerField(i,'badge','Badge / Etiqueta',b.badge,'⚡ Oferta por tempo limitado')}
+          ${bannerField(i,'theme','Tema de cor','','','select',themes)}
+          ${bannerField(i,'title1','Título linha 1',b.title1,'Festival de')}
+          ${bannerField(i,'title2','Título linha 2 (destaque)',b.title2,'Eletro')}
+          ${bannerField(i,'subtitle','Subtítulo',b.subtitle,'Cupons de até')}
+          ${bannerField(i,'price','Preço em destaque',b.price,'R$ 500')}
+          ${bannerField(i,'priceNote','Nota abaixo do preço',b.priceNote,'+ Frete grátis*')}
+          ${bannerField(i,'btnText','Texto do botão',b.btnText,'Ver Ofertas →')}
+          ${bannerField(i,'btnFilter','Filtro do botão (categoria ou "all")',b.btnFilter,'all')}
+        </div>
+
+        <div>
+          <p style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Produtos exibidos no banner</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:grid;grid-template-columns:60px 1fr 120px;gap:8px;">
+              <p style="font-size:10px;color:#444;text-align:center;">Emoji</p>
+              <p style="font-size:10px;color:#444;">Nome</p>
+              <p style="font-size:10px;color:#444;">Preço</p>
+            </div>
+            ${prods}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Set theme selects to current value
+  data.forEach((b, i) => {
+    const sel = document.querySelector(`select[data-bi="${i}"][data-f="theme"]`);
+    if (sel) sel.value = b.theme || 'gold';
+  });
+}
+
+function bannerField(bi, field, label, value, placeholder, type='text', options=[]) {
+  const base = `background:#111;border:1.5px solid #2a2a2a;border-radius:8px;padding:9px 12px;font-size:13px;color:#e0e0e0;outline:none;font-family:Inter,sans-serif;width:100%;`;
+  let input;
+  if (type === 'select') {
+    input = `<select data-bi="${bi}" data-f="${field}" style="${base}cursor:pointer;">
+      ${options.map(o => `<option value="${o}">${o.charAt(0).toUpperCase()+o.slice(1)}</option>`).join('')}
+    </select>`;
+  } else {
+    input = `<input type="text" value="${(value||'').replace(/"/g,'&quot;')}" placeholder="${placeholder}" data-bi="${bi}" data-f="${field}" style="${base}" />`;
+  }
+  return `<div><label style="display:block;font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;">${label}</label>${input}</div>`;
+}
+
+function toggleBanner(i) {
+  const data = Avany.banners.get();
+  data[i].active = !data[i].active;
+  Avany.banners.save(data);
+  renderBannerEditor();
+}
+
+function saveBanners() {
+  const data = Avany.banners.get();
+
+  // Read all fields from inputs
+  document.querySelectorAll('#banner-editor input[data-bi], #banner-editor select[data-bi]').forEach(el => {
+    const bi = +el.dataset.bi;
+    const f  = el.dataset.f;
+    const pi = el.dataset.pi;
+    if (pi !== undefined) {
+      if (!data[bi].products[+pi]) data[bi].products[+pi] = {};
+      data[bi].products[+pi][f] = el.value.trim();
+    } else {
+      data[bi][f] = el.value.trim();
+    }
+  });
+
+  Avany.banners.save(data);
+  const msg = document.getElementById('banner-saved-msg');
+  msg.style.display = 'block';
+  setTimeout(() => msg.style.display = 'none', 4000);
+}
+
+function resetBanners() {
+  if (!confirm('Restaurar os banners para o padrão original?')) return;
+  Avany.banners.save(Avany.banners.defaults());
+  renderBannerEditor();
+}

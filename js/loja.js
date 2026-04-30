@@ -7,6 +7,7 @@ let _activeFilter = 'all';
 // ── Init ─────────────────────────────────────────────────────
 async function initPage() {
   Avany.initHeader();
+  if (typeof renderBanners === 'function') renderBanners();
   buildCategoryNav();
   renderCatalog('all');
 
