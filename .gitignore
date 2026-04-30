@@ -17,5 +17,4 @@ venv/
 Thumbs.db
 
 # Editor
-.vscode/
 *.swp

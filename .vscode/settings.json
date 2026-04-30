@@ -1,0 +1,15 @@
+{
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "index.html":    "loja.html, admin.html, login.html, cadastro.html, carrinho.html, conta.html, preview.html",
+    "package.json":  "vite.config.js, App.jsx",
+    "app.py":        "requirements.txt",
+    "netlify.toml":  "supabase-setup.sql, .gitignore"
+  },
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc":       true,
+    "**/node_modules": true
+  }
+}
