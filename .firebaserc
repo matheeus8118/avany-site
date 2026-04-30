@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "avanymoveis"
+  },
+  "targets": {
+    "avanymoveis": {
+      "hosting": {
+        "avanymoveiseletronicos": [
+          "avanymoveiseletronicos"
+        ]
+      }
+    }
   }
 }

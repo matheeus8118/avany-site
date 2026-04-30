@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "avanymoveiseletronicos",
     "public": ".",
     "ignore": [
       "firebase.json",
