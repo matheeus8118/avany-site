@@ -25,7 +25,12 @@
       { "source": "/login",    "destination": "/login.html"    },
       { "source": "/cadastro", "destination": "/cadastro.html" },
       { "source": "/carrinho", "destination": "/carrinho.html" },
-      { "source": "/conta",    "destination": "/conta.html"    }
+      { "source": "/conta",      "destination": "/conta.html"      },
+      { "source": "/checkout",   "destination": "/checkout.html"   },
+      { "source": "/atendimento","destination": "/atendimento.html"},
+      { "source": "/lojas",      "destination": "/lojas.html"      },
+      { "source": "/rastrear",   "destination": "/rastrear.html"   },
+      { "source": "/trocas",     "destination": "/trocas.html"     }
     ],
     "headers": [
       {

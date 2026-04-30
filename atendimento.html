@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Atendimento — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;}
+    .gold-text{background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .gold-gradient{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);}
+    .btn-gold{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif;}
+    .btn-gold:hover{opacity:.9;}
+    .card{background:#161616;border:1px solid #222;border-radius:16px;}
+    .input-f{width:100%;background:#111;border:1.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;font-size:14px;color:#e0e0e0;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+    .input-f:focus{border-color:#c9a04c;}
+    .input-f::placeholder{color:#444;}
+    .faq-item{background:#161616;border:1px solid #222;border-radius:12px;overflow:hidden;transition:border-color .2s;}
+    .faq-item:hover{border-color:#c9a04c44;}
+    .faq-q{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;cursor:pointer;font-size:14px;font-weight:500;color:#ddd;}
+    .faq-a{display:none;padding:0 20px 16px;font-size:13px;color:#888;line-height:1.7;}
+    .faq-a.open{display:block;}
+    .faq-icon{font-size:18px;color:#c9a04c;transition:transform .2s;flex-shrink:0;}
+    a{text-decoration:none;}
+  </style>
+</head>
+<body>
+
+  <header style="background:#111;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+        <div class="gold-gradient" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="19" height="19" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:.15em;line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px;color:#555;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="flex:1;"></div>
+      <a href="loja.html" style="font-size:13px;color:#777;padding:8px 14px;border:1px solid #1e1e1e;border-radius:8px;transition:all .2s;" onmouseover="this.style.borderColor='#c9a04c44';this.style.color='#c9a04c'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#777'">← Voltar à Loja</a>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1280px;margin:0 auto;padding:48px 24px;width:100%;">
+
+    <!-- Hero -->
+    <div style="text-align:center;margin-bottom:56px;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:8px;">Suporte</p>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:700;color:#fff;margin-bottom:12px;">Como podemos <span class="gold-text">ajudar?</span></h1>
+      <p style="font-size:15px;color:#666;max-width:480px;margin:0 auto;">Nossa equipe está aqui para garantir a melhor experiência de compra.</p>
+    </div>
+
+    <!-- Canais de atendimento -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:60px;">
+      <div class="card" style="padding:28px;text-align:center;transition:border-color .2s;cursor:pointer;" onmouseover="this.style.borderColor='#25d36644'" onmouseout="this.style.borderColor='#222'">
+        <div style="width:56px;height:56px;border-radius:16px;background:#25d36615;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;">💬</div>
+        <p style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;">WhatsApp</p>
+        <p style="font-size:12px;color:#666;margin-bottom:14px;">Seg–Sex, 8h–18h</p>
+        <a href="https://wa.me/5511999999999?text=Olá! Preciso de ajuda." target="_blank" style="display:inline-block;padding:9px 20px;background:#25d366;color:#fff;font-size:13px;font-weight:600;border-radius:8px;font-family:'Inter',sans-serif;">Iniciar conversa</a>
+      </div>
+      <div class="card" style="padding:28px;text-align:center;transition:border-color .2s;cursor:pointer;" onmouseover="this.style.borderColor='#c9a04c44'" onmouseout="this.style.borderColor='#222'">
+        <div style="width:56px;height:56px;border-radius:16px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;">📧</div>
+        <p style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;">Email</p>
+        <p style="font-size:12px;color:#666;margin-bottom:14px;">Resposta em até 24h</p>
+        <a href="mailto:atendimento@avany.com.br" style="display:inline-block;padding:9px 20px;background:#c9a04c;color:#111;font-size:13px;font-weight:600;border-radius:8px;font-family:'Inter',sans-serif;">Enviar email</a>
+      </div>
+      <div class="card" style="padding:28px;text-align:center;transition:border-color .2s;cursor:pointer;" onmouseover="this.style.borderColor='#4ade8044'" onmouseout="this.style.borderColor='#222'">
+        <div style="width:56px;height:56px;border-radius:16px;background:#4ade8015;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;">📞</div>
+        <p style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;">Telefone</p>
+        <p style="font-size:12px;color:#666;margin-bottom:14px;">0800 000 0000 · Gratuito</p>
+        <a href="tel:08000000000" style="display:inline-block;padding:9px 20px;background:#1e1e1e;border:1px solid #4ade8033;color:#4ade80;font-size:13px;font-weight:600;border-radius:8px;font-family:'Inter',sans-serif;">Ligar agora</a>
+      </div>
+      <div class="card" style="padding:28px;text-align:center;transition:border-color .2s;" onmouseover="this.style.borderColor='#c9a04c44'" onmouseout="this.style.borderColor='#222'">
+        <div style="width:56px;height:56px;border-radius:16px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:28px;">📦</div>
+        <p style="font-size:15px;font-weight:700;color:#fff;margin-bottom:4px;">Rastrear Pedido</p>
+        <p style="font-size:12px;color:#666;margin-bottom:14px;">Acompanhe sua entrega</p>
+        <a href="rastrear.html" style="display:inline-block;padding:9px 20px;background:#1e1e1e;border:1px solid #c9a04c33;color:#c9a04c;font-size:13px;font-weight:600;border-radius:8px;font-family:'Inter',sans-serif;">Rastrear →</a>
+      </div>
+    </div>
+
+    <!-- FAQ + Formulário -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+
+      <!-- FAQ -->
+      <div>
+        <h2 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;">Perguntas Frequentes</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;" id="faq-list">
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Como rastrear meu pedido?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Acesse <a href="rastrear.html" style="color:#c9a04c;">rastrear pedido</a> e informe o número do pedido (ex: #AVN-2026-1001). Você também pode acompanhar em <a href="conta.html#ped" style="color:#c9a04c;">Minha Conta → Pedidos</a>.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Qual o prazo de entrega?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">O prazo varia conforme a sua região: capitais de 3 a 5 dias úteis, interior de 5 a 10 dias úteis. Produtos com frete grátis podem ter prazos diferentes. Após o despacho, você receberá o código de rastreamento por email.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Como faço para trocar ou devolver?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Você tem até 30 dias após o recebimento para solicitar troca ou devolução. Acesse nossa <a href="trocas.html" style="color:#c9a04c;">política de trocas</a> ou entre em contato pelo WhatsApp. O produto deve estar sem uso e com a embalagem original.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Quais formas de pagamento são aceitas?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Aceitamos cartão de crédito (Visa, Mastercard, Elo, Amex) parcelado em até 12x sem juros, Pix (com 5% de desconto) e Boleto Bancário. Todos os pagamentos são processados com segurança SSL.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Posso cancelar meu pedido?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Pedidos podem ser cancelados em até 24h após a confirmação, desde que ainda não tenham sido despachados. Entre em contato pelo WhatsApp ou email para solicitar o cancelamento.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>A loja tem garantia nos produtos?</span>
+              <span class="faq-icon">+</span>
+            </div>
+            <div class="faq-a">Todos os produtos possuem garantia do fabricante (mínimo 1 ano). Além disso, oferecemos 30 dias de garantia Avany para defeitos de fabricação. Para acionamento, entre em contato com nosso suporte.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Formulário de contato -->
+      <div class="card" style="padding:28px;">
+        <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;">Fale Conosco</h2>
+        <p style="font-size:13px;color:#555;margin-bottom:22px;">Preencha o formulário e responderemos em até 24h</p>
+        <div style="display:flex;flex-direction:column;gap:14px;" id="contact-form">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Nome</label>
+            <input type="text" id="ct-nome" class="input-f" placeholder="Seu nome" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Email</label>
+            <input type="email" id="ct-email" class="input-f" placeholder="seu@email.com" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Número do Pedido (opcional)</label>
+            <input type="text" id="ct-pedido" class="input-f" placeholder="#AVN-2026-0001" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Assunto</label>
+            <select id="ct-assunto" class="input-f">
+              <option value="">Selecione</option>
+              <option>Entrega / Rastreamento</option>
+              <option>Troca ou Devolução</option>
+              <option>Problema com produto</option>
+              <option>Cancelamento de pedido</option>
+              <option>Pagamento</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Mensagem</label>
+            <textarea id="ct-msg" class="input-f" rows="4" placeholder="Descreva sua dúvida ou problema…" style="resize:vertical;"></textarea>
+          </div>
+          <p id="ct-err" style="display:none;font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;"></p>
+          <p id="ct-ok" style="display:none;font-size:12px;color:#4ade80;background:#0d1f0d;border:1px solid #4ade8033;border-radius:8px;padding:9px 12px;"></p>
+          <button class="btn-gold" style="padding:13px;font-size:14px;" onclick="sendContact()">Enviar Mensagem</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer style="background:#080808;border-top:1px solid #1a1a1a;padding:16px 24px;text-align:center;margin-top:auto;">
+    <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
+  </footer>
+
+  <script src="js/avany.js"></script>
+  <script>
+    function toggleFaq(el) {
+      const answer = el.nextElementSibling;
+      const icon   = el.querySelector('.faq-icon');
+      const isOpen = answer.classList.contains('open');
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-icon').forEach(i => { i.textContent = '+'; i.style.transform = 'rotate(0deg)'; });
+      if (!isOpen) {
+        answer.classList.add('open');
+        icon.textContent = '−';
+      }
+    }
+
+    function sendContact() {
+      const nome    = document.getElementById('ct-nome').value.trim();
+      const email   = document.getElementById('ct-email').value.trim();
+      const assunto = document.getElementById('ct-assunto').value;
+      const msg     = document.getElementById('ct-msg').value.trim();
+      const err     = document.getElementById('ct-err');
+      const ok      = document.getElementById('ct-ok');
+
+      if (!nome || !email || !assunto || !msg) {
+        err.textContent = 'Preencha todos os campos obrigatórios.';
+        err.style.display = 'block'; ok.style.display = 'none';
+        return;
+      }
+      if (!email.includes('@')) {
+        err.textContent = 'Email inválido.';
+        err.style.display = 'block'; ok.style.display = 'none';
+        return;
+      }
+      err.style.display = 'none';
+      ok.textContent = '✓ Mensagem enviada com sucesso! Responderemos em até 24 horas.';
+      ok.style.display = 'block';
+      document.getElementById('ct-nome').value = '';
+      document.getElementById('ct-email').value = '';
+      document.getElementById('ct-pedido').value = '';
+      document.getElementById('ct-assunto').value = '';
+      document.getElementById('ct-msg').value = '';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Rastrear Pedido — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;}
+    .gold-text{background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .gold-gradient{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);}
+    .btn-gold{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif;}
+    .btn-gold:hover{opacity:.9;}
+    .card{background:#161616;border:1px solid #222;border-radius:16px;}
+    .input-f{width:100%;background:#111;border:1.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;font-size:14px;color:#e0e0e0;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+    .input-f:focus{border-color:#c9a04c;}
+    .input-f::placeholder{color:#444;}
+    .track-step{display:flex;gap:14px;align-items:flex-start;}
+    .track-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+    .track-line{width:2px;height:40px;background:#222;margin:4px 0 4px 6px;}
+    a{text-decoration:none;}
+  </style>
+</head>
+<body>
+
+  <header style="background:#111;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+        <div class="gold-gradient" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="19" height="19" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:.15em;line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px;color:#555;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="flex:1;"></div>
+      <a href="conta.html#ped" style="font-size:13px;color:#c9a04c;padding:8px 14px;border:1px solid #c9a04c33;border-radius:8px;transition:all .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='transparent'">Meus Pedidos</a>
+      <a href="loja.html" style="font-size:13px;color:#777;padding:8px 14px;border:1px solid #1e1e1e;border-radius:8px;transition:all .2s;" onmouseover="this.style.borderColor='#c9a04c44';this.style.color='#c9a04c'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#777'">← Loja</a>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:720px;margin:0 auto;padding:48px 24px;width:100%;">
+
+    <div style="text-align:center;margin-bottom:40px;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:8px;">Entrega</p>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:700;color:#fff;margin-bottom:10px;">Rastrear <span class="gold-text">Pedido</span></h1>
+      <p style="font-size:14px;color:#666;">Informe o número do pedido para acompanhar a entrega</p>
+    </div>
+
+    <!-- Busca -->
+    <div class="card" style="padding:28px;margin-bottom:24px;">
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;">
+          <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:6px;">Número do Pedido</label>
+          <input type="text" id="tr-num" class="input-f" placeholder="Ex: AVN-2026-1001" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')rastrear()" />
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn-gold" style="padding:12px 20px;font-size:14px;" onclick="rastrear()">Rastrear</button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#555;margin-top:10px;">O número está no email de confirmação ou em <a href="conta.html#ped" style="color:#c9a04c;">Minha Conta → Pedidos</a></p>
+    </div>
+
+    <!-- Resultado -->
+    <div id="track-result" style="display:none;">
+      <div class="card" style="padding:24px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #1e1e1e;">
+          <div>
+            <p id="tr-pedido-num" style="font-size:16px;font-weight:700;" class="gold-text"></p>
+            <p id="tr-pedido-data" style="font-size:12px;color:#555;margin-top:2px;"></p>
+          </div>
+          <span id="tr-status-badge" style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;"></span>
+        </div>
+        <div id="tr-produto" style="display:flex;align-items:center;gap:12px;">
+          <div id="tr-emoji" style="font-size:32px;"></div>
+          <div>
+            <p id="tr-nome" style="font-size:13px;font-weight:500;color:#ddd;"></p>
+            <p id="tr-valor" style="font-size:13px;color:#888;margin-top:2px;"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="card" style="padding:24px;">
+        <p style="font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;">Histórico de Entrega</p>
+        <div id="tr-timeline" style="display:flex;flex-direction:column;"></div>
+      </div>
+    </div>
+
+    <!-- Not found -->
+    <div id="track-notfound" style="display:none;" class="card">
+      <div style="padding:40px;text-align:center;">
+        <p style="font-size:40px;margin-bottom:16px;">🔍</p>
+        <p style="font-size:16px;font-weight:600;color:#fff;margin-bottom:8px;">Pedido não encontrado</p>
+        <p style="font-size:13px;color:#555;margin-bottom:20px;">Verifique o número do pedido e tente novamente.<br>O número começa com <strong style="color:#ccc;">AVN-</strong></p>
+        <a href="atendimento.html" style="font-size:13px;color:#c9a04c;border:1px solid #c9a04c44;padding:9px 20px;border-radius:8px;display:inline-block;">Falar com Atendimento</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer style="background:#080808;border-top:1px solid #1a1a1a;padding:16px 24px;text-align:center;margin-top:auto;">
+    <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
+  </footer>
+
+  <script src="js/avany.js"></script>
+  <script>
+    // Simulação de dados de rastreamento
+    const FAKE_ORDERS = {
+      'AVN-2026-0041': {
+        num: '#AVN-2026-0041', data: '12 de abril de 2026',
+        status: 'Em trânsito', statusColor: '#facc15', statusBg: '#3a2f0a',
+        emoji: '❄️', nome: 'Geladeira Frost Free 480L Inox', valor: 'R$ 3.099,90',
+        timeline: [
+          { done:true,  icon:'✓', title:'Pedido confirmado',     date:'12/04 · 09:14',  desc:'Pagamento aprovado e pedido processado.' },
+          { done:true,  icon:'✓', title:'Em preparação',         date:'12/04 · 14:30',  desc:'Produto separado e embalado no centro de distribuição.' },
+          { done:true,  icon:'✓', title:'Saiu para entrega',     date:'14/04 · 08:00',  desc:'Produto saiu do CD e está a caminho.' },
+          { done:false, icon:'○', title:'Em trânsito',           date:'Previsão: 15/04', desc:'Em rota de entrega para seu endereço.' },
+          { done:false, icon:'○', title:'Entregue',              date:'Previsão: 16/04', desc:'Aguardando entrega no endereço cadastrado.' },
+        ]
+      },
+      'AVN-2026-0038': {
+        num: '#AVN-2026-0038', data: '5 de abril de 2026',
+        status: 'Entregue', statusColor: '#4ade80', statusBg: '#1a3a1a',
+        emoji: '🍟', nome: 'Air Fryer Digital 5,5L + Fone Bluetooth', valor: 'R$ 649,80',
+        timeline: [
+          { done:true, icon:'✓', title:'Pedido confirmado',  date:'05/04 · 10:22', desc:'Pagamento aprovado.' },
+          { done:true, icon:'✓', title:'Em preparação',      date:'05/04 · 16:00', desc:'Separado no estoque.' },
+          { done:true, icon:'✓', title:'Saiu para entrega',  date:'07/04 · 07:45', desc:'Produto despachado.' },
+          { done:true, icon:'✓', title:'Entregue',           date:'08/04 · 14:30', desc:'Entregue com sucesso!' },
+        ]
+      }
+    };
+
+    function rastrear() {
+      const raw = document.getElementById('tr-num').value.trim().toUpperCase().replace(/^#/, '');
+      const key = 'AVN-' + raw.replace(/^AVN-/,'');
+      const order = FAKE_ORDERS[key] || FAKE_ORDERS[raw];
+
+      document.getElementById('track-result').style.display   = 'none';
+      document.getElementById('track-notfound').style.display = 'none';
+
+      if (!order) {
+        document.getElementById('track-notfound').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('tr-pedido-num').textContent   = order.num;
+      document.getElementById('tr-pedido-data').textContent  = 'Realizado em ' + order.data;
+      document.getElementById('tr-emoji').textContent        = order.emoji;
+      document.getElementById('tr-nome').textContent         = order.nome;
+      document.getElementById('tr-valor').textContent        = order.valor;
+
+      const badge = document.getElementById('tr-status-badge');
+      badge.textContent = order.status;
+      badge.style.cssText = `font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;color:${order.statusColor};background:${order.statusBg};`;
+
+      const timeline = document.getElementById('tr-timeline');
+      timeline.innerHTML = order.timeline.map((step, i) => {
+        const isLast = i === order.timeline.length - 1;
+        return `
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;
+                ${step.done ? 'background:#4ade8020;border:2px solid #4ade80;color:#4ade80;' : 'background:#1e1e1e;border:2px solid #333;color:#555;'}">${step.icon}</div>
+              ${!isLast ? `<div style="width:2px;height:36px;background:${step.done?'#4ade8044':'#222'};margin-top:4px;"></div>` : ''}
+            </div>
+            <div style="padding-bottom:${isLast?'0':'16px'};">
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px;">
+                <p style="font-size:14px;font-weight:600;color:${step.done?'#fff':'#555'};">${step.title}</p>
+                <p style="font-size:11px;color:#555;">${step.date}</p>
+              </div>
+              <p style="font-size:12px;color:${step.done?'#888':'#444'};">${step.desc}</p>
+            </div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('track-result').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#','');
+      if (hash && hash.startsWith('AVN')) {
+        document.getElementById('tr-num').value = hash;
+        rastrear();
+      }
+    });
+  </script>
+</body>
+</html>

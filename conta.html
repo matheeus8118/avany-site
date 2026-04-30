@@ -147,7 +147,7 @@
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <p style="font-size:13px;color:#888;">Total: <strong style="color:#fff;">R$ 3.099,90</strong></p>
-                <button style="font-size:12px;color:#c9a04c;background:transparent;border:1px solid #c9a04c44;border-radius:7px;padding:6px 14px;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='transparent'">Rastrear Pedido</button>
+                <button onclick="window.location.href='rastrear.html#AVN-2026-0041'" style="font-size:12px;color:#c9a04c;background:transparent;border:1px solid #c9a04c44;border-radius:7px;padding:6px 14px;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='transparent'">Rastrear Pedido</button>
               </div>
             </div>
 
@@ -174,7 +174,7 @@
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <p style="font-size:13px;color:#888;">Total: <strong style="color:#fff;">R$ 649,80</strong></p>
-                <button style="font-size:12px;color:#888;background:transparent;border:1px solid #1e1e1e;border-radius:7px;padding:6px 14px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#333';this.style.color='#ccc'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#888'">Comprar Novamente</button>
+                <button onclick="window.location.href='loja.html'" style="font-size:12px;color:#888;background:transparent;border:1px solid #1e1e1e;border-radius:7px;padding:6px 14px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#333';this.style.color='#ccc'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#888'">Comprar Novamente</button>
               </div>
             </div>
 
@@ -194,7 +194,7 @@
               </div>
               <div style="display:flex;justify-content:space-between;align-items:center;">
                 <p style="font-size:13px;color:#888;">Total: <strong style="color:#fff;">R$ 1.959,30</strong></p>
-                <button style="font-size:12px;color:#888;background:transparent;border:1px solid #1e1e1e;border-radius:7px;padding:6px 14px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#333';this.style.color='#ccc'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#888'">Comprar Novamente</button>
+                <button onclick="window.location.href='loja.html'" style="font-size:12px;color:#888;background:transparent;border:1px solid #1e1e1e;border-radius:7px;padding:6px 14px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='#333';this.style.color='#ccc'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#888'">Comprar Novamente</button>
               </div>
             </div>
           </div>
@@ -266,7 +266,7 @@
                 <input type="checkbox" style="width:15px;height:15px;accent-color:#c9a04c;" /> Definir como endereço principal
               </label>
               <div style="display:flex;gap:10px;">
-                <button class="btn-gold" style="flex:1;padding:12px;font-size:14px;">Salvar Endereço</button>
+                <button class="btn-gold" style="flex:1;padding:12px;font-size:14px;" onclick="saveAddress()">Salvar Endereço</button>
                 <button onclick="toggleAddrForm()" style="flex:1;padding:12px;font-size:14px;background:transparent;border:1.5px solid #2a2a2a;border-radius:10px;color:#888;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">Cancelar</button>
               </div>
             </div>
@@ -301,7 +301,7 @@
               <div><label style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Nome no Documento</label>
                 <input type="text" placeholder="Opcional" class="input-f" />
               </div>
-              <button class="btn-gold" style="padding:13px;font-size:14px;">Salvar Documento</button>
+              <button class="btn-gold" style="padding:13px;font-size:14px;" onclick="saveDoc()">Salvar Documento</button>
             </div>
           </div>
         </div>
@@ -340,7 +340,7 @@
               <div><label style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Senha Atual</label><input type="password" placeholder="••••••••" class="input-f" /></div>
               <div><label style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Nova Senha</label><input type="password" placeholder="Mínimo 8 caracteres" class="input-f" /></div>
               <div><label style="font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Confirmar Nova Senha</label><input type="password" placeholder="Repita a nova senha" class="input-f" /></div>
-              <button class="btn-gold" style="padding:13px;font-size:14px;">Atualizar Senha</button>
+              <button class="btn-gold" style="padding:13px;font-size:14px;" onclick="updatePassword()">Atualizar Senha</button>
             </div>
           </div>
         </div>
@@ -354,6 +354,7 @@
     <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/avany.js"></script>
   <script>
     function initPage() {
@@ -399,12 +400,48 @@
     function savePerfil() {
       const user = Avany.auth.get();
       const nome = document.getElementById('pf-nome').value.trim();
-      const sob = document.getElementById('pf-sob').value.trim();
+      const sob  = document.getElementById('pf-sob').value.trim();
       if (!nome) { Avany.toast('Informe seu nome.', 'error'); return; }
       user.name = (nome + ' ' + sob).trim();
       Avany.auth.set(user);
       document.getElementById('sidebar-name').textContent = user.name;
-      Avany.toast('✓ Perfil atualizado com sucesso!');
+      document.getElementById('perfil-name').textContent  = user.name;
+      Avany.toast('✓ Perfil atualizado!');
+    }
+
+    function saveAddress() {
+      const cep    = document.querySelector('#addr-form input[placeholder="00000-000"]').value.trim();
+      const rua    = document.querySelector('#addr-form input[placeholder="Ex: Rua das Flores"]').value.trim();
+      const numero = document.querySelector('#addr-form input[placeholder="123"]').value.trim();
+      const cidade = document.querySelector('#addr-form input[placeholder="São Paulo"]').value.trim();
+      if (!cep || !rua || !numero || !cidade) { Avany.toast('Preencha todos os campos.', 'error'); return; }
+      Avany.toast('✓ Endereço salvo com sucesso!');
+      toggleAddrForm();
+    }
+
+    function saveDoc() {
+      const num = document.querySelector('#sec-documentos input[placeholder="000.000.000-00"]').value.trim();
+      if (!num) { Avany.toast('Informe o número do documento.', 'error'); return; }
+      Avany.toast('✓ Documento salvo!');
+    }
+
+    async function updatePassword() {
+      const inputs   = document.querySelectorAll('#sec-perfil .card:last-child input[type="password"]');
+      const atual    = inputs[0]?.value || '';
+      const nova     = inputs[1]?.value || '';
+      const confirma = inputs[2]?.value || '';
+
+      if (!atual || !nova || !confirma) { Avany.toast('Preencha todos os campos.', 'error'); return; }
+      if (nova.length < 6)              { Avany.toast('A nova senha deve ter pelo menos 6 caracteres.', 'error'); return; }
+      if (nova !== confirma)            { Avany.toast('As senhas não coincidem.', 'error'); return; }
+
+      const sb = Avany.sb();
+      if (!sb) { Avany.toast('Supabase não configurado.', 'error'); return; }
+
+      const { error } = await sb.auth.updateUser({ password: nova });
+      if (error) { Avany.toast('Erro: ' + error.message, 'error'); return; }
+      Avany.toast('✓ Senha atualizada com sucesso!');
+      inputs.forEach(i => i.value = '');
     }
   </script>
 </body>

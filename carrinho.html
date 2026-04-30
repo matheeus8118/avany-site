@@ -244,8 +244,7 @@
         }
         return;
       }
-      document.getElementById('modal-overlay').classList.remove('hidden');
-      Avany.cart.clear();
+      window.location.href = 'checkout.html';
     }
 
     document.getElementById('modal-overlay').addEventListener('click', function(e) {

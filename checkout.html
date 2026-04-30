@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Checkout — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;}
+    .gold-text{background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .gold-gradient{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);}
+    .btn-gold{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .2s,transform .15s;font-family:'Inter',sans-serif;}
+    .btn-gold:hover{opacity:.9;transform:translateY(-1px);}
+    .card{background:#161616;border:1px solid #222;border-radius:16px;}
+    .input-f{width:100%;background:#111;border:1.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;font-size:14px;color:#e0e0e0;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .input-f:focus{border-color:#c9a04c;box-shadow:0 0 0 3px rgba(201,160,76,.1);}
+    .input-f::placeholder{color:#444;}
+    .step-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #333;color:#555;flex-shrink:0;transition:all .3s;}
+    .step-dot.active{border-color:#c9a04c;color:#c9a04c;background:#c9a04c15;}
+    .step-dot.done{border-color:#4ade80;background:#4ade8020;color:#4ade80;}
+    .step-line{flex:1;height:2px;background:#222;transition:background .3s;}
+    .step-line.done{background:#4ade8060;}
+    .pay-opt{background:#111;border:1.5px solid #2a2a2a;border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;}
+    .pay-opt:hover{border-color:#c9a04c44;}
+    .pay-opt.selected{border-color:#c9a04c;background:#c9a04c08;}
+    .form-step{display:none;}
+    .form-step.active{display:block;}
+    a{text-decoration:none;}
+  </style>
+</head>
+<body>
+
+  <header style="background:#111;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+        <div class="gold-gradient" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="19" height="19" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:.15em;line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px;color:#555;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="flex:1;text-align:center;">
+        <span style="font-size:13px;color:#555;">Finalizar Compra</span>
+        <span style="font-size:13px;color:#333;margin:0 6px;">›</span>
+        <span id="step-label" style="font-size:13px;color:#c9a04c;font-weight:600;">Endereço</span>
+      </div>
+      <a href="carrinho.html" style="font-size:13px;color:#555;padding:8px 14px;border:1px solid #1e1e1e;border-radius:8px;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='#c9a04c44';this.style.color='#c9a04c'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#555'">← Carrinho</a>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1280px;margin:0 auto;padding:32px 24px;width:100%;">
+
+    <!-- Steps -->
+    <div style="display:flex;align-items:center;max-width:380px;margin:0 auto 32px;">
+      <div class="step-dot active" id="ck-s1">1</div>
+      <div class="step-line" id="ck-l1"></div>
+      <div class="step-dot" id="ck-s2">2</div>
+      <div class="step-line" id="ck-l2"></div>
+      <div class="step-dot" id="ck-s3">3</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+
+      <!-- LEFT -->
+      <div>
+
+        <!-- STEP 1: Endereço -->
+        <div class="form-step active" id="ck-form-1">
+          <div class="card" style="padding:28px;">
+            <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;">Endereço de Entrega</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:22px;">Para onde devemos entregar?</p>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div style="display:grid;grid-template-columns:1fr auto;gap:10px;">
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">CEP *</label>
+                  <input type="text" id="ck-cep" class="input-f" placeholder="00000-000" maxlength="9" oninput="maskCEP(this)" onblur="buscarCEP()" />
+                </div>
+                <div style="display:flex;align-items:flex-end;">
+                  <button onclick="buscarCEP()" style="padding:12px 16px;background:#1e1e1e;border:1.5px solid #2a2a2a;border-radius:10px;color:#c9a04c;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .2s;white-space:nowrap;" onmouseover="this.style.borderColor='#c9a04c'" onmouseout="this.style.borderColor='#2a2a2a'">Buscar</button>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 100px;gap:10px;">
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Rua / Avenida *</label>
+                  <input type="text" id="ck-rua" class="input-f" placeholder="Ex: Rua das Flores" />
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Número *</label>
+                  <input type="text" id="ck-num" class="input-f" placeholder="123" />
+                </div>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Complemento</label>
+                <input type="text" id="ck-comp" class="input-f" placeholder="Apto, Bloco, Sala… (opcional)" />
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 80px;gap:10px;">
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Cidade *</label>
+                  <input type="text" id="ck-cidade" class="input-f" placeholder="São Paulo" />
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">UF *</label>
+                  <input type="text" id="ck-uf" class="input-f" placeholder="SP" maxlength="2" style="text-transform:uppercase;" />
+                </div>
+              </div>
+              <p id="addr-err" style="display:none;font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;"></p>
+              <button onclick="goCK(2)" class="btn-gold" style="padding:14px;font-size:14px;">Continuar para Pagamento →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Pagamento -->
+        <div class="form-step" id="ck-form-2">
+          <div class="card" style="padding:28px;">
+            <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;">Forma de Pagamento</h2>
+            <p style="font-size:13px;color:#555;margin-bottom:20px;">Escolha como deseja pagar</p>
+
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px;">
+              <div class="pay-opt selected" id="pay-card" onclick="selectPay('card')">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:36px;height:36px;border-radius:8px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;font-size:18px;">💳</div>
+                  <div><p style="font-size:14px;font-weight:600;color:#fff;">Cartão de Crédito</p><p style="font-size:12px;color:#666;">Até 12x sem juros</p></div>
+                </div>
+              </div>
+              <div class="pay-opt" id="pay-pix" onclick="selectPay('pix')">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:36px;height:36px;border-radius:8px;background:#4ade8015;display:flex;align-items:center;justify-content:center;font-size:18px;">⚡</div>
+                  <div><p style="font-size:14px;font-weight:600;color:#fff;">Pix</p><p style="font-size:12px;color:#4ade80;">Aprovação imediata · 5% de desconto</p></div>
+                </div>
+              </div>
+              <div class="pay-opt" id="pay-boleto" onclick="selectPay('boleto')">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div style="width:36px;height:36px;border-radius:8px;background:#1e1e2e;display:flex;align-items:center;justify-content:center;font-size:18px;">📄</div>
+                  <div><p style="font-size:14px;font-weight:600;color:#fff;">Boleto Bancário</p><p style="font-size:12px;color:#666;">Vence em 3 dias úteis</p></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulário cartão -->
+            <div id="form-card" style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Número do Cartão</label>
+                <input type="text" id="cc-num" class="input-f" placeholder="0000 0000 0000 0000" maxlength="19" oninput="maskCard(this)" />
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Nome no Cartão</label>
+                <input type="text" id="cc-nome" class="input-f" placeholder="Como está impresso no cartão" style="text-transform:uppercase;" />
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Validade</label>
+                  <input type="text" id="cc-exp" class="input-f" placeholder="MM/AA" maxlength="5" oninput="maskExp(this)" />
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">CVV</label>
+                  <input type="text" id="cc-cvv" class="input-f" placeholder="123" maxlength="4" type="password" />
+                </div>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Parcelas</label>
+                <select id="cc-parcelas" class="input-f"></select>
+              </div>
+            </div>
+
+            <!-- Pix info -->
+            <div id="form-pix" style="display:none;text-align:center;padding:24px;background:#111;border-radius:12px;margin-bottom:20px;">
+              <div style="width:120px;height:120px;background:#1a1a1a;border:2px solid #2a2a2a;border-radius:12px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="3" height="3"/><rect x="18" y="18" width="3" height="3"/></svg>
+              </div>
+              <p style="font-size:13px;color:#888;margin-bottom:6px;">QR Code será gerado ao confirmar o pedido</p>
+              <p style="font-size:13px;color:#4ade80;font-weight:600;">5% de desconto no total!</p>
+            </div>
+
+            <!-- Boleto info -->
+            <div id="form-boleto" style="display:none;padding:16px;background:#111;border-radius:12px;margin-bottom:20px;">
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">📄 Boleto Bancário</p>
+              <p style="font-size:13px;color:#777;line-height:1.5;">O boleto será gerado após a confirmação. Vencimento em <strong style="color:#ccc;">3 dias úteis</strong>. O pedido só será processado após a confirmação do pagamento.</p>
+            </div>
+
+            <p id="pay-err" style="display:none;font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;margin-bottom:14px;"></p>
+            <div style="display:flex;gap:10px;">
+              <button onclick="goCK(1)" style="flex:1;padding:13px;font-size:14px;background:transparent;border:1.5px solid #2a2a2a;border-radius:10px;color:#888;cursor:pointer;font-family:'Inter',sans-serif;transition:border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">← Voltar</button>
+              <button onclick="goCK(3)" class="btn-gold" style="flex:2;padding:14px;font-size:14px;" id="btn-confirm">Confirmar Pedido →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: Confirmação -->
+        <div class="form-step" id="ck-form-3">
+          <div class="card" style="padding:40px;text-align:center;">
+            <div style="width:80px;height:80px;border-radius:50%;background:#1a3a1a;border:2px solid #4ade8066;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:38px;">✓</div>
+            <h2 style="font-size:24px;font-weight:700;color:#fff;margin-bottom:8px;">Pedido Confirmado!</h2>
+            <p style="font-size:14px;color:#888;margin-bottom:8px;">Número do pedido</p>
+            <p id="order-num" style="font-size:22px;font-weight:800;margin-bottom:6px;" class="gold-text"></p>
+            <p id="pay-method-msg" style="font-size:13px;color:#555;margin-bottom:20px;"></p>
+            <p style="font-size:13px;color:#555;line-height:1.7;margin-bottom:32px;">Você receberá um email de confirmação.<br>Acompanhe na <strong style="color:#ccc;">Minha Conta</strong>.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto;">
+              <a href="conta.html#ped" class="btn-gold" style="display:block;padding:14px;font-size:14px;border-radius:10px;text-align:center;box-shadow:0 6px 20px #c9a04c25;">Acompanhar Pedido</a>
+              <a href="loja.html" style="display:block;padding:12px;font-size:14px;color:#888;border:1px solid #2a2a2a;border-radius:10px;text-align:center;transition:border-color .2s;" onmouseover="this.style.borderColor='#444'" onmouseout="this.style.borderColor='#2a2a2a'">Continuar Comprando</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Summary -->
+      <div class="card" style="padding:24px;position:sticky;top:90px;">
+        <h3 style="font-size:15px;font-weight:700;color:#fff;margin-bottom:16px;">Resumo do Pedido</h3>
+        <div id="ck-items" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;max-height:260px;overflow-y:auto;padding-right:4px;"></div>
+        <div style="border-top:1px solid #1e1e1e;padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#888;">Subtotal</span><span id="ck-subtotal" style="color:#ddd;"></span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#888;">Frete</span><span id="ck-frete" style="color:#4ade80;"></span></div>
+          <div id="ck-desc-row" style="display:none;justify-content:space-between;font-size:13px;"><span style="color:#4ade80;">Desconto Pix (5%)</span><span id="ck-desc" style="color:#4ade80;"></span></div>
+        </div>
+        <div style="border-top:1px solid #2a2a2a;margin-top:12px;padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:14px;font-weight:700;color:#fff;">Total</span>
+          <span id="ck-total" style="font-size:22px;font-weight:800;" class="gold-text"></span>
+        </div>
+        <div style="margin-top:14px;padding:10px;background:#111;border-radius:8px;text-align:center;">
+          <p style="font-size:11px;color:#555;">🔒 Compra 100% segura · SSL</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;justify-content:center;">
+          <span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:3px 8px;font-size:10px;color:#666;">Visa</span>
+          <span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:3px 8px;font-size:10px;color:#666;">Master</span>
+          <span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:3px 8px;font-size:10px;color:#666;">Pix</span>
+          <span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:3px 8px;font-size:10px;color:#666;">Boleto</span>
+          <span style="background:#1e1e1e;border:1px solid #2a2a2a;border-radius:5px;padding:3px 8px;font-size:10px;color:#666;">Elo</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="background:#080808;border-top:1px solid #1a1a1a;padding:16px 24px;text-align:center;">
+    <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/avany.js"></script>
+  <script>
+    let ckStep = 1;
+    let selectedPay = 'card';
+
+    function goCK(n) {
+      if (n === 2) {
+        const cep    = document.getElementById('ck-cep').value.trim();
+        const rua    = document.getElementById('ck-rua').value.trim();
+        const num    = document.getElementById('ck-num').value.trim();
+        const cidade = document.getElementById('ck-cidade').value.trim();
+        const uf     = document.getElementById('ck-uf').value.trim();
+        const err    = document.getElementById('addr-err');
+        if (!cep || !rua || !num || !cidade || !uf) {
+          err.textContent = 'Preencha todos os campos obrigatórios (*)';
+          err.style.display = 'block';
+          return;
+        }
+        err.style.display = 'none';
+        document.getElementById('step-label').textContent = 'Pagamento';
+      }
+
+      if (n === 3) {
+        if (selectedPay === 'card') {
+          const cn   = document.getElementById('cc-num').value.replace(/\D/g,'');
+          const nome = document.getElementById('cc-nome').value.trim();
+          const exp  = document.getElementById('cc-exp').value.trim();
+          const cvv  = document.getElementById('cc-cvv').value.trim();
+          const err  = document.getElementById('pay-err');
+          if (cn.length < 16 || !nome || exp.length < 5 || cvv.length < 3) {
+            err.textContent = 'Dados do cartão incompletos. Verifique e tente novamente.';
+            err.style.display = 'block';
+            return;
+          }
+          err.style.display = 'none';
+        }
+        // Finaliza pedido
+        const yr  = new Date().getFullYear();
+        const seq = String(Math.floor(1000 + Math.random() * 9000));
+        document.getElementById('order-num').textContent = '#AVN-' + yr + '-' + seq;
+        document.getElementById('step-label').textContent = 'Confirmado!';
+
+        const msgs = {
+          card:   'Pagamento no cartão aprovado. Você receberá a confirmação por email.',
+          pix:    'Pix registrado. Efetue o pagamento em até 30 minutos para não cancelar.',
+          boleto: 'Boleto gerado. Pague em até 3 dias úteis para confirmar o pedido.',
+        };
+        document.getElementById('pay-method-msg').textContent = msgs[selectedPay];
+        Avany.cart.clear();
+      }
+
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('ck-form-' + n).classList.add('active');
+      [1,2,3].forEach(i => {
+        const el = document.getElementById('ck-s' + i);
+        el.classList.remove('active','done');
+        if (i < n) { el.classList.add('done'); el.textContent = '✓'; }
+        else if (i === n) { el.classList.add('active'); el.textContent = i; }
+        else el.textContent = i;
+      });
+      [1,2].forEach(i => document.getElementById('ck-l' + i).classList.toggle('done', i < n));
+      ckStep = n;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectPay(type) {
+      selectedPay = type;
+      ['card','pix','boleto'].forEach(t => {
+        document.getElementById('pay-' + t).classList.toggle('selected', t === type);
+        document.getElementById('form-' + t).style.display = t === type ? (t==='card'?'flex':'block') : 'none';
+        if (t === 'card') document.getElementById('form-card').style.flexDirection = 'column';
+      });
+      const btn = document.getElementById('btn-confirm');
+      btn.textContent = type === 'pix' ? 'Gerar QR Code Pix →' : type === 'boleto' ? 'Gerar Boleto →' : 'Confirmar Pedido →';
+      updateSummary();
+    }
+
+    function maskCEP(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length > 5) v = v.slice(0,5)+'-'+v.slice(5);
+      el.value = v.slice(0,9);
+    }
+    function maskCard(el) {
+      let v = el.value.replace(/\D/g,'').match(/.{1,4}/g)?.join(' ') || el.value.replace(/\D/g,'');
+      el.value = v.slice(0,19);
+    }
+    function maskExp(el) {
+      let v = el.value.replace(/\D/g,'');
+      if (v.length > 2) v = v.slice(0,2)+'/'+v.slice(2);
+      el.value = v.slice(0,5);
+    }
+
+    async function buscarCEP() {
+      const cep = document.getElementById('ck-cep').value.replace(/\D/g,'');
+      if (cep.length !== 8) return;
+      try {
+        const r = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+        const d = await r.json();
+        if (!d.erro) {
+          document.getElementById('ck-rua').value    = d.logradouro || '';
+          document.getElementById('ck-cidade').value = d.localidade || '';
+          document.getElementById('ck-uf').value     = d.uf || '';
+          document.getElementById('ck-num').focus();
+        }
+      } catch {}
+    }
+
+    function updateSummary() {
+      const items    = Avany.cart.get();
+      const subtotal = Avany.cart.subtotal();
+      const frete    = subtotal >= 299 ? 0 : 29.90;
+      const discount = selectedPay === 'pix' ? subtotal * 0.05 : 0;
+      const total    = subtotal + frete - discount;
+
+      document.getElementById('ck-subtotal').textContent = Avany.fmtPrice(subtotal);
+      document.getElementById('ck-frete').textContent    = frete === 0 ? 'Grátis 🎉' : Avany.fmtPrice(frete);
+      document.getElementById('ck-total').textContent    = Avany.fmtPrice(total);
+
+      const row = document.getElementById('ck-desc-row');
+      if (discount > 0) {
+        row.style.display = 'flex';
+        document.getElementById('ck-desc').textContent = '−' + Avany.fmtPrice(discount);
+      } else {
+        row.style.display = 'none';
+      }
+
+      document.getElementById('ck-items').innerHTML = items.map(item => `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:44px;height:44px;border-radius:8px;background:#1e1e1e;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${item.emoji}</div>
+          <div style="flex:1;min-width:0;">
+            <p style="font-size:12px;color:#ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</p>
+            <p style="font-size:11px;color:#666;">Qtd: ${item.qty}</p>
+          </div>
+          <p style="font-size:13px;font-weight:600;color:#fff;flex-shrink:0;">${Avany.fmtPrice(item.price * item.qty)}</p>
+        </div>
+      `).join('');
+
+      const sel = document.getElementById('cc-parcelas');
+      if (sel && items.length) {
+        sel.innerHTML = Array.from({length:12},(_,i) => {
+          const n = i + 1;
+          return `<option value="${n}">${n}x de ${Avany.fmtPrice(total / n)} sem juros</option>`;
+        }).join('');
+      }
+    }
+
+    function initPage() {
+      const user = Avany.auth.get();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (Avany.cart.get().length === 0) {
+        window.location.href = 'carrinho.html';
+        return;
+      }
+      updateSummary();
+      selectPay('card');
+    }
+  </script>
+</body>
+</html>

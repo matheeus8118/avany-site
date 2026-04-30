@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Nossas Lojas — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;}
+    .gold-text{background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .gold-gradient{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);}
+    .card{background:#161616;border:1px solid #222;border-radius:16px;transition:border-color .2s;}
+    .card:hover{border-color:#c9a04c44;}
+    a{text-decoration:none;}
+  </style>
+</head>
+<body>
+
+  <header style="background:#111;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+        <div class="gold-gradient" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="19" height="19" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:.15em;line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px;color:#555;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="flex:1;"></div>
+      <a href="loja.html" style="font-size:13px;color:#777;padding:8px 14px;border:1px solid #1e1e1e;border-radius:8px;transition:all .2s;" onmouseover="this.style.borderColor='#c9a04c44';this.style.color='#c9a04c'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#777'">← Voltar à Loja</a>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1280px;margin:0 auto;padding:48px 24px;width:100%;">
+
+    <div style="text-align:center;margin-bottom:56px;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:8px;">Presença física</p>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,52px);font-weight:700;color:#fff;margin-bottom:12px;">Nossas <span class="gold-text">Lojas</span></h1>
+      <p style="font-size:15px;color:#666;max-width:480px;margin:0 auto;">Visite uma de nossas lojas físicas e veja os produtos de perto.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:48px;">
+
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;font-size:22px;">🏬</div>
+          <div>
+            <p style="font-size:15px;font-weight:700;color:#fff;">Avany Paulista</p>
+            <span style="font-size:11px;background:#4ade8015;color:#4ade80;padding:2px 8px;border-radius:999px;">Aberta agora</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="font-size:14px;flex-shrink:0;margin-top:1px;">📍</span>
+            <p style="font-size:13px;color:#888;">Av. Paulista, 1000 — Loja 12<br>Bela Vista — São Paulo/SP · CEP 01310-100</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">🕐</span>
+            <p style="font-size:13px;color:#888;">Seg–Sex: 9h–21h · Sáb: 9h–18h · Dom: 10h–16h</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">📞</span>
+            <p style="font-size:13px;color:#888;">(11) 3333-1001</p>
+          </div>
+        </div>
+        <a href="https://maps.google.com/?q=Av.+Paulista,+1000+São+Paulo" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;font-size:13px;color:#c9a04c;font-weight:600;transition:background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='#1e1e1e'">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ver no Mapa
+        </a>
+      </div>
+
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;font-size:22px;">🏬</div>
+          <div>
+            <p style="font-size:15px;font-weight:700;color:#fff;">Avany Morumbi</p>
+            <span style="font-size:11px;background:#4ade8015;color:#4ade80;padding:2px 8px;border-radius:999px;">Aberta agora</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="font-size:14px;flex-shrink:0;margin-top:1px;">📍</span>
+            <p style="font-size:13px;color:#888;">Shopping Morumbi, Piso L3 — Loja 234<br>Santo Amaro — São Paulo/SP · CEP 04677-900</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">🕐</span>
+            <p style="font-size:13px;color:#888;">Seg–Sáb: 10h–22h · Dom: 12h–20h</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">📞</span>
+            <p style="font-size:13px;color:#888;">(11) 3333-2002</p>
+          </div>
+        </div>
+        <a href="https://maps.google.com/?q=Shopping+Morumbi+São+Paulo" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;font-size:13px;color:#c9a04c;font-weight:600;transition:background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='#1e1e1e'">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ver no Mapa
+        </a>
+      </div>
+
+      <div class="card" style="padding:28px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#c9a04c15;display:flex;align-items:center;justify-content:center;font-size:22px;">🏬</div>
+          <div>
+            <p style="font-size:15px;font-weight:700;color:#fff;">Avany Campinas</p>
+            <span style="font-size:11px;background:#4ade8015;color:#4ade80;padding:2px 8px;border-radius:999px;">Aberta agora</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <span style="font-size:14px;flex-shrink:0;margin-top:1px;">📍</span>
+            <p style="font-size:13px;color:#888;">Rua Barão de Jaguará, 450 — Centro<br>Campinas/SP · CEP 13010-060</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">🕐</span>
+            <p style="font-size:13px;color:#888;">Seg–Sex: 9h–20h · Sáb: 9h–17h</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span style="font-size:14px;">📞</span>
+            <p style="font-size:13px;color:#888;">(19) 3333-3003</p>
+          </div>
+        </div>
+        <a href="https://maps.google.com/?q=Rua+Barão+de+Jaguará,+450+Campinas" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:#1e1e1e;border:1px solid #2a2a2a;border-radius:10px;font-size:13px;color:#c9a04c;font-weight:600;transition:background .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='#1e1e1e'">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ver no Mapa
+        </a>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div style="background:linear-gradient(135deg,#1a1500,#2a2200);border:1px solid #c9a04c33;border-radius:16px;padding:36px;text-align:center;">
+      <p style="font-size:28px;margin-bottom:12px;">🛒</p>
+      <h3 style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;">Prefere comprar online?</h3>
+      <p style="font-size:14px;color:#666;margin-bottom:20px;">Explore nossa loja virtual com os melhores preços e entrega em todo o Brasil.</p>
+      <a href="loja.html" style="display:inline-block;padding:13px 28px;background:linear-gradient(135deg,#c9a04c,#e8c96d);color:#111;font-size:14px;font-weight:700;border-radius:10px;font-family:'Inter',sans-serif;">Ver Catálogo Online →</a>
+    </div>
+
+  </main>
+
+  <footer style="background:#080808;border-top:1px solid #1a1a1a;padding:16px 24px;text-align:center;margin-top:auto;">
+    <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
+  </footer>
+
+  <script src="js/avany.js"></script>
+</body>
+</html>

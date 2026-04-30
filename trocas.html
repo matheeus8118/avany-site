@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Trocas e Devoluções — Avany Móveis e Eletro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:#0e0e0e;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;}
+    .gold-text{background:linear-gradient(135deg,#c9a04c,#e8c96d,#c9a04c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .gold-gradient{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);}
+    .btn-gold{background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:opacity .2s;font-family:'Inter',sans-serif;}
+    .btn-gold:hover{opacity:.9;}
+    .card{background:#161616;border:1px solid #222;border-radius:16px;}
+    .input-f{width:100%;background:#111;border:1.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;font-size:14px;color:#e0e0e0;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+    .input-f:focus{border-color:#c9a04c;}
+    .input-f::placeholder{color:#444;}
+    .step-num{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9a04c,#e8c96d);color:#111;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    a{text-decoration:none;}
+  </style>
+</head>
+<body>
+
+  <header style="background:#111;border-bottom:1px solid #1e1e1e;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.4);">
+    <div style="max-width:1280px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;">
+        <div class="gold-gradient" style="width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="19" height="19" fill="#111" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+        </div>
+        <div>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;letter-spacing:.15em;line-height:1;" class="gold-text">AVANY</p>
+          <p style="font-size:9px;color:#555;letter-spacing:.12em;text-transform:uppercase;line-height:1.2;">Móveis e Eletro</p>
+        </div>
+      </a>
+      <div style="flex:1;"></div>
+      <a href="atendimento.html" style="font-size:13px;color:#c9a04c;padding:8px 14px;border:1px solid #c9a04c33;border-radius:8px;transition:all .2s;" onmouseover="this.style.background='#c9a04c15'" onmouseout="this.style.background='transparent'">Atendimento</a>
+      <a href="loja.html" style="font-size:13px;color:#777;padding:8px 14px;border:1px solid #1e1e1e;border-radius:8px;transition:all .2s;" onmouseover="this.style.borderColor='#c9a04c44';this.style.color='#c9a04c'" onmouseout="this.style.borderColor='#1e1e1e';this.style.color='#777'">← Loja</a>
+    </div>
+  </header>
+
+  <main style="flex:1;max-width:1100px;margin:0 auto;padding:48px 24px;width:100%;">
+
+    <div style="text-align:center;margin-bottom:56px;">
+      <p style="font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:#c9a04c;margin-bottom:8px;">Política</p>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:#fff;margin-bottom:12px;">Trocas e <span class="gold-text">Devoluções</span></h1>
+      <p style="font-size:15px;color:#666;max-width:520px;margin:0 auto;">Compre com confiança. Se não ficar satisfeito, cuidamos de tudo para você.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;margin-bottom:56px;">
+
+      <!-- Política -->
+      <div>
+        <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:20px;">Nossa Política</h2>
+
+        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px;">
+          <div class="card" style="padding:18px;display:flex;gap:14px;align-items:flex-start;">
+            <div style="font-size:24px;flex-shrink:0;">↩️</div>
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">30 dias para devolver</p>
+              <p style="font-size:13px;color:#666;line-height:1.5;">Você tem 30 dias corridos após o recebimento para solicitar troca ou devolução sem precisar justificar.</p>
+            </div>
+          </div>
+          <div class="card" style="padding:18px;display:flex;gap:14px;align-items:flex-start;">
+            <div style="font-size:24px;flex-shrink:0;">📦</div>
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">Produto sem uso e na embalagem</p>
+              <p style="font-size:13px;color:#666;line-height:1.5;">O produto deve estar em perfeitas condições, sem sinais de uso e com a embalagem original.</p>
+            </div>
+          </div>
+          <div class="card" style="padding:18px;display:flex;gap:14px;align-items:flex-start;">
+            <div style="font-size:24px;flex-shrink:0;">🚚</div>
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">Frete de devolução por nossa conta</p>
+              <p style="font-size:13px;color:#666;line-height:1.5;">Em caso de defeito de fabricação ou arrependimento, o frete de retorno é por nossa conta.</p>
+            </div>
+          </div>
+          <div class="card" style="padding:18px;display:flex;gap:14px;align-items:flex-start;">
+            <div style="font-size:24px;flex-shrink:0;">💰</div>
+            <div>
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">Reembolso em até 7 dias úteis</p>
+              <p style="font-size:13px;color:#666;line-height:1.5;">Após recebermos e analisarmos o produto, o estorno é processado em até 7 dias úteis.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passo a passo -->
+        <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:16px;">Como solicitar</h2>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div class="step-num">1</div>
+            <div style="padding-top:4px;">
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;">Preencha o formulário ao lado</p>
+              <p style="font-size:13px;color:#666;">Informe o número do pedido e o motivo da devolução.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div class="step-num">2</div>
+            <div style="padding-top:4px;">
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;">Receba as instruções por email</p>
+              <p style="font-size:13px;color:#666;">Em até 24h enviamos o código de postagem e as instruções de devolução.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div class="step-num">3</div>
+            <div style="padding-top:4px;">
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;">Embale e envie</p>
+              <p style="font-size:13px;color:#666;">Poste o produto em qualquer agência dos Correios usando o código fornecido.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div class="step-num">4</div>
+            <div style="padding-top:4px;">
+              <p style="font-size:14px;font-weight:600;color:#fff;margin-bottom:3px;">Receba o reembolso</p>
+              <p style="font-size:13px;color:#666;">Após análise (até 5 dias úteis), efetuamos o estorno no mesmo meio de pagamento.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de solicitação -->
+      <div class="card" style="padding:28px;">
+        <h2 style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;">Solicitar Devolução</h2>
+        <p style="font-size:13px;color:#555;margin-bottom:22px;">Preencha os dados abaixo</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Número do Pedido</label>
+            <input type="text" id="tr-num" class="input-f" placeholder="#AVN-2026-0001" oninput="this.value=this.value.toUpperCase()" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Email do Pedido</label>
+            <input type="email" id="tr-email" class="input-f" placeholder="email@usado.no.pedido.com" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Tipo de Solicitação</label>
+            <select id="tr-tipo" class="input-f">
+              <option value="">Selecione</option>
+              <option>Troca por outro produto</option>
+              <option>Devolução e reembolso</option>
+              <option>Produto com defeito</option>
+              <option>Produto diferente do pedido</option>
+              <option>Arrependimento de compra</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:5px;">Descreva o Motivo</label>
+            <textarea id="tr-motivo" class="input-f" rows="4" placeholder="Descreva o problema ou motivo da devolução…" style="resize:vertical;"></textarea>
+          </div>
+          <p id="tr-err" style="display:none;font-size:12px;color:#f87171;background:#2a1010;border:1px solid #f8717133;border-radius:8px;padding:9px 12px;"></p>
+          <p id="tr-ok" style="display:none;font-size:12px;color:#4ade80;background:#0d1f0d;border:1px solid #4ade8033;border-radius:8px;padding:9px 12px;"></p>
+          <button class="btn-gold" style="padding:13px;font-size:14px;" onclick="solicitarTroca()">Enviar Solicitação</button>
+          <p style="font-size:12px;color:#555;text-align:center;">Ou fale pelo <a href="atendimento.html" style="color:#c9a04c;">WhatsApp ou email</a></p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer style="background:#080808;border-top:1px solid #1a1a1a;padding:16px 24px;text-align:center;margin-top:auto;">
+    <p style="font-size:12px;color:#333;">&copy; 2026 Avany Móveis e Eletro</p>
+  </footer>
+
+  <script src="js/avany.js"></script>
+  <script>
+    function solicitarTroca() {
+      const num    = document.getElementById('tr-num').value.trim();
+      const email  = document.getElementById('tr-email').value.trim();
+      const tipo   = document.getElementById('tr-tipo').value;
+      const motivo = document.getElementById('tr-motivo').value.trim();
+      const err    = document.getElementById('tr-err');
+      const ok     = document.getElementById('tr-ok');
+
+      if (!num || !email || !tipo || !motivo) {
+        err.textContent = 'Preencha todos os campos.';
+        err.style.display = 'block'; ok.style.display = 'none';
+        return;
+      }
+      err.style.display = 'none';
+      ok.textContent = '✓ Solicitação enviada! Você receberá as instruções em ' + email + ' em até 24 horas úteis.';
+      ok.style.display = 'block';
+      document.getElementById('tr-num').value    = '';
+      document.getElementById('tr-email').value  = '';
+      document.getElementById('tr-tipo').value   = '';
+      document.getElementById('tr-motivo').value = '';
+    }
+  </script>
+</body>
+</html>
