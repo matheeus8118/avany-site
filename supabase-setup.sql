@@ -1,48 +1,331 @@
 -- ================================================================
--- AVANY — Supabase Setup
--- Execute este script no SQL Editor do painel Supabase
+-- AVANY Móveis e Eletro — Schema completo do banco de dados
+-- Execute no SQL Editor do Supabase
 -- ================================================================
 
--- 1. Tabela de produtos
-CREATE TABLE IF NOT EXISTS products (
+-- ────────────────────────────────────────────────────────────────
+-- 1. PERFIS DE USUÁRIO (espelha auth.users do Supabase)
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id         UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  name       TEXT NOT NULL,
+  email      TEXT NOT NULL,
+  phone      TEXT,
+  cpf        TEXT,
+  is_admin   BOOLEAN      DEFAULT false,
+  created_at TIMESTAMPTZ  DEFAULT NOW(),
+  updated_at TIMESTAMPTZ  DEFAULT NOW()
+);
+
+-- Cria perfil automaticamente ao registrar usuário
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, name, email, is_admin)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
+    NEW.email,
+    NEW.email = 'matheeus998@gmail.com'
+  )
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ────────────────────────────────────────────────────────────────
+-- 2. ENDEREÇOS DOS USUÁRIOS
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.addresses (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id       UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  label         TEXT DEFAULT 'Casa',
+  street        TEXT NOT NULL,
+  number        TEXT NOT NULL,
+  complement    TEXT,
+  neighborhood  TEXT,
+  city          TEXT NOT NULL,
+  state         CHAR(2) NOT NULL,
+  zip_code      TEXT NOT NULL,
+  is_default    BOOLEAN DEFAULT false,
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ────────────────────────────────────────────────────────────────
+-- 3. PRODUTOS
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.products (
   id             TEXT PRIMARY KEY,
   name           TEXT NOT NULL,
-  emoji          TEXT         DEFAULT '📦',
-  category       TEXT         DEFAULT '',
+  emoji          TEXT          DEFAULT '📦',
+  category       TEXT          DEFAULT '',
+  description    TEXT          DEFAULT '',
   cost_price     NUMERIC(10,2) DEFAULT 0,
   profit_margin  NUMERIC(10,2) DEFAULT 50,
   client_price   NUMERIC(10,2) DEFAULT 0,
-  image_url      TEXT         DEFAULT '',
-  free_shipping  BOOLEAN      DEFAULT false,
-  active         BOOLEAN      DEFAULT true,
-  stars          NUMERIC(3,1) DEFAULT 5,
-  reviews        INTEGER      DEFAULT 0,
-  promo_active   BOOLEAN      DEFAULT false,
-  promo_discount INTEGER      DEFAULT 0,
-  promo_label    TEXT         DEFAULT '',
-  promo_end_date TEXT         DEFAULT '',
-  created_at     TIMESTAMPTZ  DEFAULT NOW()
+  image_url      TEXT          DEFAULT '',
+  free_shipping  BOOLEAN       DEFAULT false,
+  active         BOOLEAN       DEFAULT true,
+  stock          INTEGER       DEFAULT 0,
+  stars          NUMERIC(3,1)  DEFAULT 5,
+  reviews        INTEGER       DEFAULT 0,
+  promo_active   BOOLEAN       DEFAULT false,
+  promo_discount INTEGER       DEFAULT 0,
+  promo_label    TEXT          DEFAULT '',
+  promo_end_date TEXT          DEFAULT '',
+  created_at     TIMESTAMPTZ   DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ   DEFAULT NOW()
 );
 
--- 2. Row Level Security
-ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+-- ────────────────────────────────────────────────────────────────
+-- 4. HISTÓRICO DE PREÇOS
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.price_history (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id    TEXT NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+  cost_price    NUMERIC(10,2),
+  client_price  NUMERIC(10,2),
+  profit_margin NUMERIC(10,2),
+  changed_by    UUID REFERENCES public.profiles(id),
+  changed_at    TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Leitura pública (qualquer visitante pode ver os produtos)
-CREATE POLICY "products_select" ON products
-  FOR SELECT USING (true);
+-- Registra alteração de preço automaticamente
+CREATE OR REPLACE FUNCTION public.log_price_change()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  IF OLD.client_price <> NEW.client_price OR OLD.cost_price <> NEW.cost_price THEN
+    INSERT INTO public.price_history (product_id, cost_price, client_price, profit_margin)
+    VALUES (NEW.id, NEW.cost_price, NEW.client_price, NEW.profit_margin);
+  END IF;
+  NEW.updated_at := NOW();
+  RETURN NEW;
+END;
+$$;
 
--- Inserção, atualização e remoção: apenas o admin
-CREATE POLICY "products_insert" ON products
-  FOR INSERT WITH CHECK (auth.jwt() ->> 'email' = 'matheeus998@gmail.com');
+DROP TRIGGER IF EXISTS on_product_price_change ON public.products;
+CREATE TRIGGER on_product_price_change
+  BEFORE UPDATE ON public.products
+  FOR EACH ROW EXECUTE FUNCTION public.log_price_change();
 
-CREATE POLICY "products_update" ON products
-  FOR UPDATE USING (auth.jwt() ->> 'email' = 'matheeus998@gmail.com');
+-- ────────────────────────────────────────────────────────────────
+-- 5. PEDIDOS
+-- ────────────────────────────────────────────────────────────────
+CREATE SEQUENCE IF NOT EXISTS order_seq START 1000;
 
-CREATE POLICY "products_delete" ON products
-  FOR DELETE USING (auth.jwt() ->> 'email' = 'matheeus998@gmail.com');
+CREATE TABLE IF NOT EXISTS public.orders (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_number     TEXT UNIQUE,
+  user_id          UUID REFERENCES public.profiles(id),
+  status           TEXT NOT NULL DEFAULT 'pending',
+  -- pending | confirmed | processing | shipped | delivered | cancelled | refunded
+  subtotal         NUMERIC(10,2) NOT NULL DEFAULT 0,
+  discount         NUMERIC(10,2) DEFAULT 0,
+  shipping_cost    NUMERIC(10,2) DEFAULT 0,
+  total            NUMERIC(10,2) NOT NULL DEFAULT 0,
+  payment_method   TEXT,
+  -- pix | credit_card | debit_card | boleto
+  payment_status   TEXT DEFAULT 'pending',
+  -- pending | paid | failed | refunded
+  notes            TEXT,
+  -- Snapshot do endereço no momento da compra
+  shipping_street       TEXT,
+  shipping_number       TEXT,
+  shipping_complement   TEXT,
+  shipping_neighborhood TEXT,
+  shipping_city         TEXT,
+  shipping_state        TEXT,
+  shipping_zip          TEXT,
+  created_at       TIMESTAMPTZ DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ DEFAULT NOW()
+);
 
--- 3. Seed — 15 produtos iniciais
-INSERT INTO products
+-- Gera número do pedido automaticamente (AVN-2026-1001)
+CREATE OR REPLACE FUNCTION public.generate_order_number()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.order_number := 'AVN-' || TO_CHAR(NOW(), 'YYYY') || '-' ||
+                      LPAD(nextval('order_seq')::TEXT, 4, '0');
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS set_order_number ON public.orders;
+CREATE TRIGGER set_order_number
+  BEFORE INSERT ON public.orders
+  FOR EACH ROW EXECUTE FUNCTION public.generate_order_number();
+
+-- ────────────────────────────────────────────────────────────────
+-- 6. ITENS DO PEDIDO
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.order_items (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id        UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
+  product_id      TEXT REFERENCES public.products(id) ON DELETE SET NULL,
+  product_name    TEXT NOT NULL,
+  product_emoji   TEXT DEFAULT '📦',
+  product_category TEXT,
+  quantity        INTEGER NOT NULL DEFAULT 1,
+  unit_price      NUMERIC(10,2) NOT NULL,
+  discount_percent INTEGER DEFAULT 0,
+  total_price     NUMERIC(10,2) NOT NULL,
+  created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ────────────────────────────────────────────────────────────────
+-- 7. HISTÓRICO DE STATUS DO PEDIDO
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.order_status_history (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id   UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
+  status     TEXT NOT NULL,
+  note       TEXT,
+  changed_by UUID REFERENCES public.profiles(id),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Registra mudança de status automaticamente
+CREATE OR REPLACE FUNCTION public.log_order_status()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  IF OLD.status <> NEW.status THEN
+    INSERT INTO public.order_status_history (order_id, status)
+    VALUES (NEW.id, NEW.status);
+  END IF;
+  NEW.updated_at := NOW();
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_order_status_change ON public.orders;
+CREATE TRIGGER on_order_status_change
+  BEFORE UPDATE ON public.orders
+  FOR EACH ROW EXECUTE FUNCTION public.log_order_status();
+
+-- ────────────────────────────────────────────────────────────────
+-- 8. PAGAMENTOS
+-- ────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS public.payments (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  order_id       UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
+  method         TEXT NOT NULL,
+  status         TEXT NOT NULL DEFAULT 'pending',
+  amount         NUMERIC(10,2) NOT NULL,
+  transaction_id TEXT,
+  pix_key        TEXT,
+  pix_code       TEXT,
+  card_last4     TEXT,
+  card_brand     TEXT,
+  paid_at        TIMESTAMPTZ,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Atualiza payment_status do pedido ao pagar
+CREATE OR REPLACE FUNCTION public.sync_payment_status()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.status = 'paid' THEN
+    UPDATE public.orders
+    SET payment_status = 'paid', status = 'confirmed', updated_at = NOW()
+    WHERE id = NEW.order_id;
+  ELSIF NEW.status = 'refunded' THEN
+    UPDATE public.orders
+    SET payment_status = 'refunded', status = 'refunded', updated_at = NOW()
+    WHERE id = NEW.order_id;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS on_payment_update ON public.payments;
+CREATE TRIGGER on_payment_update
+  AFTER INSERT OR UPDATE ON public.payments
+  FOR EACH ROW EXECUTE FUNCTION public.sync_payment_status();
+
+-- ================================================================
+-- ROW LEVEL SECURITY
+-- ================================================================
+
+ALTER TABLE public.profiles           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.addresses          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.price_history      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders             ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.order_items        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.order_status_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payments           ENABLE ROW LEVEL SECURITY;
+
+-- Helper: verifica se o usuário atual é admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN LANGUAGE sql SECURITY DEFINER AS $$
+  SELECT COALESCE(
+    (SELECT is_admin FROM public.profiles WHERE id = auth.uid()),
+    false
+  );
+$$;
+
+-- ── Profiles ────────────────────────────────────────────────────
+CREATE POLICY "perfil_leitura_propria"  ON public.profiles FOR SELECT USING (auth.uid() = id OR public.is_admin());
+CREATE POLICY "perfil_atualiza_proprio" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "perfil_insere_proprio"   ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- ── Addresses ───────────────────────────────────────────────────
+CREATE POLICY "enderecos_proprios" ON public.addresses FOR ALL USING (auth.uid() = user_id OR public.is_admin());
+
+-- ── Products ────────────────────────────────────────────────────
+CREATE POLICY "produtos_leitura_publica" ON public.products FOR SELECT USING (true);
+CREATE POLICY "produtos_admin_insert"    ON public.products FOR INSERT  WITH CHECK (public.is_admin());
+CREATE POLICY "produtos_admin_update"    ON public.products FOR UPDATE  USING (public.is_admin());
+CREATE POLICY "produtos_admin_delete"    ON public.products FOR DELETE  USING (public.is_admin());
+
+-- ── Price history ────────────────────────────────────────────────
+CREATE POLICY "precos_admin" ON public.price_history FOR ALL USING (public.is_admin());
+
+-- ── Orders ──────────────────────────────────────────────────────
+CREATE POLICY "pedidos_proprios" ON public.orders
+  FOR SELECT USING (auth.uid() = user_id OR public.is_admin());
+CREATE POLICY "pedidos_criar"    ON public.orders
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "pedidos_admin_update" ON public.orders
+  FOR UPDATE USING (public.is_admin());
+
+-- ── Order items ──────────────────────────────────────────────────
+CREATE POLICY "itens_proprios" ON public.order_items
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.orders o WHERE o.id = order_id AND (o.user_id = auth.uid() OR public.is_admin()))
+  );
+CREATE POLICY "itens_criar" ON public.order_items
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.orders o WHERE o.id = order_id AND o.user_id = auth.uid())
+  );
+
+-- ── Order status history ─────────────────────────────────────────
+CREATE POLICY "historico_proprios" ON public.order_status_history
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.orders o WHERE o.id = order_id AND (o.user_id = auth.uid() OR public.is_admin()))
+  );
+
+-- ── Payments ─────────────────────────────────────────────────────
+CREATE POLICY "pagamentos_proprios" ON public.payments
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.orders o WHERE o.id = order_id AND (o.user_id = auth.uid() OR public.is_admin()))
+  );
+CREATE POLICY "pagamentos_criar" ON public.payments
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.orders o WHERE o.id = order_id AND o.user_id = auth.uid())
+  );
+CREATE POLICY "pagamentos_admin_update" ON public.payments
+  FOR UPDATE USING (public.is_admin());
+
+-- ================================================================
+-- SEED — 15 produtos iniciais
+-- ================================================================
+INSERT INTO public.products
   (id, name, emoji, category, cost_price, profit_margin, client_price,
    free_shipping, stars, reviews, promo_active, promo_discount, promo_label, created_at)
 VALUES
@@ -68,4 +351,5 @@ ON CONFLICT (id) DO NOTHING;
 -- Authentication → Users → Add user
 --   Email:  matheeus998@gmail.com
 --   Senha:  avany2026
+--   ✅ Auto Confirm User
 -- ================================================================
