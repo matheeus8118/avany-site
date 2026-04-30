@@ -43,6 +43,7 @@
         <button class="nav-item active" id="nav-dashboard"  onclick="loadView('dashboard')">📊 Painel</button>
         <button class="nav-item"        id="nav-produtos"   onclick="loadView('produtos')">📦 Produtos</button>
         <button class="nav-item"        id="nav-promocoes"  onclick="loadView('promocoes')">🏷️ Promoções</button>
+        <button class="nav-item"        id="nav-pedidos"    onclick="loadView('pedidos')">🛍️ Pedidos</button>
         <button class="nav-item"        id="nav-banners"    onclick="loadView('banners')">🖼️ Banners</button>
 
         <div class="nav-sep"></div>
@@ -102,6 +103,31 @@
             <p class="page-subtitle">Gerencie os descontos ativos do catálogo</p>
           </div>
           <div class="tbl-wrap" id="promo-table-wrap"></div>
+        </div>
+
+        <!-- Pedidos view -->
+        <div id="view-pedidos" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+            <div class="page-header" style="margin-bottom:0;">
+              <h2 class="page-title">Pedidos</h2>
+              <p class="page-subtitle" id="orders-count-lbl">Carregando…</p>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <select id="order-status-filter" onchange="renderOrdersView()" style="background:#1e1e1e;border:1px solid #333;border-radius:8px;padding:8px 12px;font-size:13px;color:#ccc;font-family:'Inter',sans-serif;outline:none;cursor:pointer;">
+                <option value="">Todos os status</option>
+                <option value="pendente">Pendente</option>
+                <option value="aguardando_pagamento">Aguardando Pagamento</option>
+                <option value="preparando">Em Preparação</option>
+                <option value="enviado">Enviado</option>
+                <option value="entregue">Entregue</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+              <button class="btn btn-sm" onclick="seedDemoOrders()" style="background:#1e1e1e;border:1px solid #333;color:#888;">+ Pedidos demo</button>
+            </div>
+          </div>
+
+          <div class="stats-grid" id="orders-stats" style="margin-bottom:24px;"></div>
+          <div id="orders-table-wrap"></div>
         </div>
 
         <!-- Banners view -->

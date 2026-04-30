@@ -277,9 +277,10 @@
           err.style.display = 'none';
         }
         // Finaliza pedido
-        const yr  = new Date().getFullYear();
-        const seq = String(Math.floor(1000 + Math.random() * 9000));
-        document.getElementById('order-num').textContent = '#AVN-' + yr + '-' + seq;
+        const yr    = new Date().getFullYear();
+        const seq   = String(Math.floor(1000 + Math.random() * 9000));
+        const ordId = 'AVN-' + yr + '-' + seq;
+        document.getElementById('order-num').textContent = '#' + ordId;
         document.getElementById('step-label').textContent = 'Confirmado!';
 
         const msgs = {
@@ -288,6 +289,36 @@
           boleto: 'Boleto gerado. Pague em até 3 dias úteis para confirmar o pedido.',
         };
         document.getElementById('pay-method-msg').textContent = msgs[selectedPay];
+
+        // Salva pedido no histórico
+        const user     = Avany.auth.get() || {};
+        const items    = Avany.cart.get();
+        const subtotal = Avany.cart.subtotal();
+        const shipping = subtotal >= 299 ? 0 : 29.90;
+        const isPix    = selectedPay === 'pix';
+        const discount = isPix ? Math.round(subtotal * 0.05 * 100) / 100 : 0;
+        const parcelas = selectedPay === 'card'
+          ? parseInt(document.getElementById('cc-parc')?.value || 1)
+          : 1;
+        Avany.orders.add({
+          id:       ordId,
+          date:     new Date().toISOString(),
+          customer: { name: user.name || 'Cliente', email: user.email || '' },
+          address: {
+            cep:        document.getElementById('ck-cep').value.trim(),
+            street:     document.getElementById('ck-rua').value.trim(),
+            number:     document.getElementById('ck-num').value.trim(),
+            complement: document.getElementById('ck-comp')?.value.trim() || '',
+            city:       document.getElementById('ck-cidade').value.trim(),
+            state:      document.getElementById('ck-uf').value.trim(),
+          },
+          payment:  { method: selectedPay, installments: parcelas },
+          items:    items.map(i => ({ id:i.id, name:i.name, emoji:i.emoji, price:i.price, qty:i.qty })),
+          subtotal, shipping, discount,
+          total:    subtotal + shipping - discount,
+          status:   selectedPay === 'boleto' ? 'aguardando_pagamento' : 'pendente',
+        });
+
         Avany.cart.clear();
       }
 

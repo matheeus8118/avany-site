@@ -30,7 +30,7 @@ function startClock() {
 
 // ── View switcher ────────────────────────────────────────────
 function loadView(name) {
-  const views = ['dashboard', 'produtos', 'promocoes', 'banners'];
+  const views = ['dashboard', 'produtos', 'promocoes', 'pedidos', 'banners'];
 
   views.forEach(v => {
     document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
@@ -40,6 +40,7 @@ function loadView(name) {
   if (name === 'dashboard')  renderDashboard();
   if (name === 'produtos')   renderProductTable();
   if (name === 'promocoes')  renderPromoTable();
+  if (name === 'pedidos')    renderOrdersView();
   if (name === 'banners')    renderBannerEditor();
 }
 
@@ -512,6 +513,171 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showPanel();
 });
+
+// ── Orders ────────────────────────────────────────────────────
+const STATUS_LABELS = {
+  pendente:              { label: 'Pendente',            color: '#c9a04c', bg: '#c9a04c18' },
+  aguardando_pagamento:  { label: 'Aguard. Pagamento',   color: '#f87171', bg: '#f8717118' },
+  preparando:            { label: 'Em Preparação',       color: '#60a5fa', bg: '#60a5fa18' },
+  enviado:               { label: 'Enviado',             color: '#a78bfa', bg: '#a78bfa18' },
+  entregue:              { label: 'Entregue',            color: '#4ade80', bg: '#4ade8018' },
+  cancelado:             { label: 'Cancelado',           color: '#6b7280', bg: '#6b728018' },
+};
+
+function renderOrdersView() {
+  const filter = document.getElementById('order-status-filter')?.value || '';
+  let   all    = Avany.orders.get();
+  const total  = all.length;
+  const filtered = filter ? all.filter(o => o.status === filter) : all;
+
+  // Stats
+  const counts = { pendente:0, aguardando_pagamento:0, preparando:0, enviado:0, entregue:0, cancelado:0 };
+  all.forEach(o => { if (counts[o.status] !== undefined) counts[o.status]++; });
+  document.getElementById('orders-stats').innerHTML = [
+    buildStatCard('🛍️', total,                    'Total Pedidos',      'var(--gold)'),
+    buildStatCard('⏳', counts.pendente + counts.aguardando_pagamento, 'Aguardando', '#f87171'),
+    buildStatCard('📦', counts.preparando + counts.enviado,            'Em Andamento','#60a5fa'),
+    buildStatCard('✅', counts.entregue,           'Entregues',         'var(--green)'),
+  ].join('');
+
+  document.getElementById('orders-count-lbl').textContent =
+    filter ? `${filtered.length} de ${total} pedido(s)` : `${total} pedido(s) no total`;
+
+  if (filtered.length === 0) {
+    document.getElementById('orders-table-wrap').innerHTML = buildEmpty(
+      total === 0
+        ? 'Nenhum pedido ainda. Clique em "+ Pedidos demo" para ver um exemplo.'
+        : 'Nenhum pedido com esse status.'
+    );
+    return;
+  }
+
+  const rows = filtered.map(o => {
+    const s   = STATUS_LABELS[o.status] || { label: o.status, color: '#888', bg: '#1a1a1a' };
+    const dt  = new Date(o.date);
+    const dtf = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+    const itemsSummary = (o.items || []).slice(0, 2).map(i => i.emoji + ' ' + i.name.substring(0, 22)).join('<br>');
+    const payIcon = { card:'💳', pix:'⚡', boleto:'📄' }[o.payment?.method] || '💰';
+    return `
+    <tr style="border-bottom:1px solid #1e1e1e;cursor:pointer;" onclick="toggleOrderDetail('${o.id}')">
+      <td style="padding:14px 16px;font-size:13px;font-weight:600;color:var(--gold);white-space:nowrap;">#${o.id}</td>
+      <td style="padding:14px 8px;font-size:12px;color:#666;white-space:nowrap;">${dtf}</td>
+      <td style="padding:14px 8px;">
+        <p style="font-size:13px;font-weight:500;color:#ddd;">${o.customer?.name || '—'}</p>
+        <p style="font-size:11px;color:#555;">${o.customer?.email || ''}</p>
+      </td>
+      <td style="padding:14px 8px;font-size:12px;color:#888;line-height:1.6;">${itemsSummary}${(o.items||[]).length > 2 ? `<br><span style="color:#555;">+${(o.items||[]).length-2} item(s)</span>` : ''}</td>
+      <td style="padding:14px 8px;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;">${Avany.fmtPrice(o.total||0)}</td>
+      <td style="padding:14px 8px;font-size:12px;color:#888;">${payIcon} ${o.payment?.method === 'card' ? o.payment?.installments+'x' : (o.payment?.method||'—')}</td>
+      <td style="padding:14px 8px;">
+        <span style="background:${s.bg};color:${s.color};border:1px solid ${s.color}44;border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;white-space:nowrap;">${s.label}</span>
+      </td>
+      <td style="padding:14px 8px;"><span style="font-size:12px;color:#555;">▼</span></td>
+    </tr>
+    <tr id="detail-${o.id}" style="display:none;">
+      <td colspan="8" style="padding:0;background:#111;border-bottom:1px solid #1e1e1e;">
+        ${buildOrderDetail(o)}
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('orders-table-wrap').innerHTML = `
+    <div class="tbl-wrap">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="border-bottom:1px solid #2a2a2a;">
+            <th style="padding:10px 16px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Pedido</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Data</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Cliente</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Itens</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Total</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Pgto</th>
+            <th style="padding:10px 8px;text-align:left;font-size:11px;color:#555;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Status</th>
+            <th style="padding:10px 8px;"></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function buildOrderDetail(o) {
+  const addr = o.address || {};
+  const itemsHtml = (o.items || []).map(i => `
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1e1e1e;">
+      <span style="font-size:28px;flex-shrink:0;">${i.emoji||'📦'}</span>
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:13px;color:#ddd;font-weight:500;">${i.name}</p>
+        <p style="font-size:11px;color:#666;">Qtd: ${i.qty} × ${Avany.fmtPrice(i.price)}</p>
+      </div>
+      <span style="font-size:13px;font-weight:700;color:#fff;">${Avany.fmtPrice(i.price * i.qty)}</span>
+    </div>`).join('');
+
+  const opts = Object.entries(STATUS_LABELS).map(([k, v]) =>
+    `<option value="${k}" ${o.status===k?'selected':''}>${v.label}</option>`).join('');
+
+  return `
+  <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+    <div>
+      <p style="font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Itens do Pedido</p>
+      ${itemsHtml}
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#666;"><span>Subtotal</span><span>${Avany.fmtPrice(o.subtotal||0)}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#666;"><span>Frete</span><span>${o.shipping===0?'Grátis':Avany.fmtPrice(o.shipping||0)}</span></div>
+        ${o.discount>0?`<div style="display:flex;justify-content:space-between;font-size:12px;color:#4ade80;"><span>Desconto Pix (5%)</span><span>-${Avany.fmtPrice(o.discount)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#fff;border-top:1px solid #2a2a2a;padding-top:6px;margin-top:4px;"><span>Total</span><span>${Avany.fmtPrice(o.total||0)}</span></div>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Endereço de Entrega</p>
+      <p style="font-size:13px;color:#ddd;line-height:1.7;">
+        ${addr.street||'—'}${addr.number?', '+addr.number:''}<br>
+        ${addr.complement?addr.complement+'<br>':''}
+        ${addr.city||''}${addr.state?' — '+addr.state:''}<br>
+        CEP: ${addr.cep||'—'}
+      </p>
+    </div>
+    <div>
+      <p style="font-size:11px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Atualizar Status</p>
+      <select id="status-sel-${o.id}" style="width:100%;background:#1e1e1e;border:1.5px solid #2a2a2a;border-radius:8px;padding:10px 12px;font-size:13px;color:#ccc;font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;cursor:pointer;">
+        ${opts}
+      </select>
+      <button onclick="saveOrderStatus('${o.id}')" style="width:100%;padding:10px;background:linear-gradient(135deg,#c9a04c,#e8c96d,#b8892a);color:#111;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Inter',sans-serif;">Salvar Status</button>
+      <p style="font-size:11px;color:#555;margin-top:12px;">Cliente: <span style="color:#888;">${o.customer?.email||'—'}</span></p>
+    </div>
+  </div>`;
+}
+
+function toggleOrderDetail(id) {
+  const row = document.getElementById('detail-' + id);
+  if (!row) return;
+  const open = row.style.display !== 'none';
+  // Fecha todos, abre o clicado
+  document.querySelectorAll('[id^="detail-"]').forEach(r => r.style.display = 'none');
+  if (!open) row.style.display = 'table-row';
+}
+
+function saveOrderStatus(id) {
+  const sel = document.getElementById('status-sel-' + id);
+  if (!sel) return;
+  Avany.orders.updateStatus(id, sel.value);
+  Avany.toast('✓ Status atualizado para "' + STATUS_LABELS[sel.value]?.label + '"');
+  renderOrdersView();
+}
+
+function seedDemoOrders() {
+  const demo = [
+    { id:'AVN-2026-0038', date:'2026-04-15T10:22:00', customer:{name:'Maria Silva',email:'maria@example.com'}, address:{cep:'01310-100',street:'Rua das Flores',number:'123',complement:'Apto 4',city:'São Paulo',state:'SP'}, payment:{method:'pix',installments:1}, items:[{id:'seed-6',name:'Smartphone 128GB 5G',emoji:'📱',price:1529.10,qty:1}], subtotal:1529.10,shipping:0,discount:76.46,total:1452.64, status:'entregue' },
+    { id:'AVN-2026-0041', date:'2026-04-22T14:30:00', customer:{name:'João Costa',email:'joao@example.com'}, address:{cep:'01311-000',street:'Av. Paulista',number:'1000',complement:'',city:'São Paulo',state:'SP'}, payment:{method:'card',installments:12}, items:[{id:'seed-2',name:'Smart TV LED 55" 4K',emoji:'🖥️',price:2249.90,qty:1},{id:'seed-7',name:'Fone Bluetooth ANC',emoji:'🎧',price:249.90,qty:1}], subtotal:2499.80,shipping:0,discount:0,total:2499.80, status:'enviado' },
+    { id:'AVN-2026-0044', date:'2026-04-28T09:15:00', customer:{name:'Ana Oliveira',email:'ana@example.com'}, address:{cep:'01304-000',street:'Rua Augusta',number:'500',complement:'',city:'São Paulo',state:'SP'}, payment:{method:'boleto',installments:1}, items:[{id:'seed-8',name:'Sofá Retrátil 3 Lugares',emoji:'🛋️',price:1959.30,qty:1}], subtotal:1959.30,shipping:29.90,discount:0,total:1989.20, status:'preparando' },
+    { id:'AVN-2026-0047', date:'2026-04-29T16:45:00', customer:{name:'Pedro Lima',email:'pedro@example.com'}, address:{cep:'01426-001',street:'Rua Oscar Freire',number:'200',complement:'Casa',city:'São Paulo',state:'SP'}, payment:{method:'card',installments:6}, items:[{id:'seed-4',name:'Notebook Intel i5',emoji:'💻',price:3299.00,qty:1},{id:'seed-11',name:'Smartwatch GPS',emoji:'⌚',price:674.25,qty:1}], subtotal:3973.25,shipping:0,discount:0,total:3973.25, status:'pendente' },
+  ];
+  const existing = Avany.orders.get();
+  const ids = new Set(existing.map(o => o.id));
+  demo.filter(d => !ids.has(d.id)).forEach(d => Avany.orders.add(d));
+  renderOrdersView();
+  Avany.toast('✓ Pedidos de demonstração adicionados!');
+}
 
 // ── Banner Editor ─────────────────────────────────────────────
 function renderBannerEditor() {

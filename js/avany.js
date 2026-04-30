@@ -221,6 +221,18 @@ const Avany = (function () {
     },
   };
 
+  // ── ORDERS ──────────────────────────────────────────────────
+  const ORDERS_KEY = 'avany_orders';
+
+  const orders = {
+    get()           { try { return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; } catch { return []; } },
+    save(list)      { localStorage.setItem(ORDERS_KEY, JSON.stringify(list)); },
+    add(order)      { const l = this.get(); l.unshift(order); this.save(l); },
+    updateStatus(id, status) {
+      this.save(this.get().map(o => o.id === id ? { ...o, status } : o));
+    },
+  };
+
   // ── BANNERS ─────────────────────────────────────────────────
   const BANNERS_KEY = 'avany_banners';
   const BANNER_DEFAULTS = [
@@ -378,7 +390,7 @@ const Avany = (function () {
   }
 
   // ── PUBLIC API ──────────────────────────────────────────────
-  return { auth, cart, products, banners, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
+  return { auth, cart, products, banners, orders, toast, fmtPrice, initHeader, updateBadge: _updateBadge, sb: _sb };
 })();
 
 // Auto-init
